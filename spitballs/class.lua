@@ -17,6 +17,10 @@ function Class(Parent)
 
   setmetatable(Class, inheritance)
 
+  function Class:derive()
+    return Class(self)
+  end
+
   return Class
 end
 
