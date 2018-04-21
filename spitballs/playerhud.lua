@@ -8,6 +8,7 @@ end
 
 -- TODO pretty this display up
 function PlayerHud:draw(game)
+  love.graphics.setColor(255, 255, 255, 255)
   love.graphics.print("Machines: " .. #self.player.machines, 0, 30)
 end
 
