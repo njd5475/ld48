@@ -6,6 +6,7 @@ require('utils')
 function Game:_init()
   print("Initialize the game")
   self.objects = {}
+  self.types = {}
   local me = self
   love.draw = function() me:draw() end
   love.update = function(dt) me:update(dt) end
@@ -36,6 +37,7 @@ function Game:update(dt)
       b:update(self, dt)
     else
       self.objects[b:id()] = nil
+      self.types[b:type()][b:id()] = nil
     end
   end
 
@@ -51,9 +53,33 @@ end
 function Game:add(o)
   if o.dead and o.id and not o:dead() then
     self.objects[o:id()] = o
+    if not self.types[o:type()] then
+      self.types[o:type()] = {}
+    end
+    self.types[o:type()][o:id()] = o
   else
     print("Err: Game only accepts non-dead game objects")
   end
+end
+
+function Game:withinRange(x, y, range, type)
+  local results = {}
+  local objs = self.objects
+  if type then
+    objs = self.types[type]
+  end
+
+  local rangeSq = range*range
+  if objs then
+    for _, o in pairs(objs) do
+      local dsq = distSq(o:boundsX(), o:boundsY(), x, y)
+      if (rangeSq+o:boundsRadiiSq()) >= dsq then
+        table.insert(results, o)
+      end
+    end
+  end
+
+  return results
 end
 
 function Game:addHud(o)

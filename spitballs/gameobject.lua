@@ -8,7 +8,6 @@ function GameObject:_init()
   _GameObjectCount = _GameObjectCount + 1
   self._id = _GameObjectCount
   self._dead = false
-  self._type = "none"
 end
 
 GameObject.id = function(o) return o._id end
@@ -21,17 +20,18 @@ GameObject.boundsX = function() return 0 end
 GameObject.boundsY = function() return 0 end
 GameObject.boundsWidth = function() return 0 end
 GameObject.boundsHeight = function() return 0 end
-GameObject.boundsRadiiSq = function()
-  return distSq(self:boundsX()+self:boundsWidth()/2, 
-    self:boundsY()+self:boundsHeight()/2, self:boundsX(), self:boundsY())
+GameObject.boundsRadiiSq = function(o)
+  return distSq(o:boundsX()+o:boundsWidth()/2,
+    o:boundsY()+o:boundsHeight()/2, o:boundsX(), o:boundsY())
 end
 GameObject.bounds = function(o) return {x=o:boundsX(), y=o:boundsY(), w=o:boundsWidth(), h=o:boundsHeight()} end
-GameObject.type = function(o) return o._type end
+GameObject.type = function(o) return (o._type or "none") end
 GameObject.derive = function(o, type)
+  local newClass = Class(o)
   if type then
-    o._type = type
+    newClass._type = type
   end
-  return Class(o)
+  return newClass
 end
 
 return GameObject

@@ -7,9 +7,9 @@ SpitAudio[0] = love.audio.newSource("spit-01.wav", "static")
 SpitAudio[1] = love.audio.newSource("spit-02.wav", "static")
 SpitAudio[2] = love.audio.newSource("spit-03.wav", "static")
 
-function Spitball:_init(dirX, dirY)
+function Spitball:_init(x, y, dirX, dirY)
   GameObject._init(self)
-  self.x, self.y = love.graphics:getWidth()/2, love.graphics:getHeight()/2
+  self.x, self.y = (x or love.graphics:getWidth()/2), (y or love.graphics:getHeight()/2)
   self.dir = {
     x = dirX or 1,
     y = dirY or 0
