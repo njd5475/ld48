@@ -6,6 +6,7 @@ local Vec = require('vec')
 function machine:_init()
   require('gameobject')._init(self)
   self.reloadTime = 0.5
+  self.height = 70
   self.w = 20
   self.h = 20
   self.boundsX = function(o) return o.x-o.w/2 end
@@ -13,6 +14,7 @@ function machine:_init()
   self.boundsWidth = function(o) return o.w end
   self.boundsHeight = function(o) return o.h end
   self.boundsCenter = function(o) return o.x, o.y end
+  self.feet = function(o) return {{x=o.x, y=o.y+o.height}} end
 end
 
 function machine:update(game, dt)
@@ -20,7 +22,8 @@ function machine:update(game, dt)
 end
 
 function machine:draw(game)
-  love.graphics.setColor(255, 255, 255, 255)
+  love.graphics.setColor(0, 0, 0, 255)
+  love.graphics.line(self.x, self.y, self.x, self.y + self.height)
   love.graphics.ellipse("fill", self.x, self.y, self.w, self.h)
 
 end
@@ -41,7 +44,10 @@ function machine:shouldShootCats(game, dt)
     local catsNearBy = game:withinRange(self.x, self.y, 200*200, 'cat')
     for _, c in pairs(catsNearBy) do
       local dir = Vec(c:boundsX(), c:boundsY()):sub(myVec):normalize()
-      game:add(require('spitball')(self.x, self.y, dir.x, dir.y))
+      local sb = require('spitball')(self.x, self.y, dir.x, dir.y)
+      sb.static = true
+      sb.speed = 500
+      game:add(sb)
     end
     self.timeout = self.reloadTime
   end

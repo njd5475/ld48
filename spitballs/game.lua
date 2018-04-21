@@ -16,13 +16,15 @@ function Game:_init()
     w = love.graphics:getWidth(),
     h = love.graphics:getHeight()
   }
-  self.gravity = 200 --639
+  self.gravity = 319 --639 --200 --639
   self.hud = {}
   self.player = require('player')()
   self:add(self.player)
 end
 
 function Game:draw()
+  love.graphics.setColor(150, 150, 245, 255)
+  love.graphics.rectangle("fill", 0, 0, love.graphics:getWidth(), love.graphics:getHeight())
   for _, b in pairs(self.objects) do
     b:draw(self)
   end
@@ -65,10 +67,13 @@ function Game:fallOrStop(o, dt)
       o:kill()
     else
       local bounds = o:bounds()
-      local results = self:withinRange(o.x, o.y, o:boundsRadiiSq(), "platform")
-      for _, p in pairs(results) do
-        if collides(p:bounds(), bounds) then
-          o.y = lastY
+      local feet = o:feet()
+      for _, f in pairs(feet) do
+        local results = self:withinRange(f.x, f.y, o:boundsRadiiSq(), "platform")
+        for _, p in pairs(results) do
+          if inside(p:bounds(), f.x, f.y) then
+            o.y = lastY
+          end
         end
       end
     end

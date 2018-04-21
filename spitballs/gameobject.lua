@@ -23,6 +23,7 @@ GameObject.boundsHeight = function() return 0 end
 GameObject.boundsCenter = function(o)
   return o:boundsX() + o:boundsWidth() / 2, o:boundsY() + o:boundsHeight()/2
 end
+GameObject.feet = function(o) return {{x=o.x, y=o.y}} end
 GameObject.boundsRadiiSq = function(o)
   return distSq(o:boundsX()+o:boundsWidth()/2,
     o:boundsY()+o:boundsHeight()/2, o:boundsX(), o:boundsY())

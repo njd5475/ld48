@@ -3,17 +3,19 @@ local Cat = require('gameobject'):derive("cat")
 
 local Game = require('game')
 
-function Cat:_init()
+function Cat:_init(x,y)
   require('gameobject')._init(self)
-  self.x, self.y = love.math.random(Game.bounds.w), love.math.random(Game.bounds.h)
+  self.x, self.y = (x or love.math.random(Game.bounds.w)), (y or love.math.random(Game.bounds.h))
   self.w, self.h = 20, 20
   self.maxHealth = 100
+  self.height = 20
   self.health = self.maxHealth
   self.boundsX = function(o) return o.x-o.w/2 end
   self.boundsY = function(o) return o.y-o.h/2 end
   self.boundsWidth = function(o) return o.w end
   self.boundsHeight = function(o) return o.h end
   self.boundsCenter = function(o) return o.x, o.y end
+  self.feet = function(o) return {{x=o.x, y=o.y+o.height}} end
   self.radii = math.sqrt(self:boundsRadiiSq())
   require('game'):addHud(require('hud.cathud')(self))
 end

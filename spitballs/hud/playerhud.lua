@@ -9,7 +9,7 @@ end
 -- TODO pretty this display up
 function PlayerHud:draw(game)
   love.graphics.setColor(255, 255, 255, 255)
-  love.graphics.print("Machines: " .. #self.player.machines, 0, 30)
+  love.graphics.print("Spitball Machines: " .. #self.player.machines, 0, love.graphics.getFont():getHeight())
 end
 
 require('game'):addHud(PlayerHud(require('game').player))
