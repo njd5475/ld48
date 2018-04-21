@@ -14,6 +14,7 @@ function Spitball:_init(x, y, dirX, dirY)
     x = dirX or 1,
     y = dirY or 0
   }
+  self.damage = 5
   self.speed = 200
   self.boundsX = function(o) return o.x end
   self.boundsY = function(o) return o.y end

@@ -62,14 +62,13 @@ function Game:add(o)
   end
 end
 
-function Game:withinRange(x, y, range, type)
+function Game:withinRange(x, y, rangeSq, type)
   local results = {}
   local objs = self.objects
   if type then
     objs = self.types[type]
   end
 
-  local rangeSq = range*range
   if objs then
     for _, o in pairs(objs) do
       local dsq = distSq(o:boundsX(), o:boundsY(), x, y)
