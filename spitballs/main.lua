@@ -1,5 +1,6 @@
 
 local Game = require("game")
+require('spitballtest')
 
 love.keyreleased = function(key)
   if key == 'escape' then

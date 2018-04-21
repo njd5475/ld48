@@ -1,17 +1,27 @@
 
 local Game = require("class")()
-local Spitball = require('spitball')
+
+require('utils')
 
 function Game:_init()
+  print("Initialize the game")
   self.objects = {}
   local me = self
   love.draw = function() me:draw() end
   love.update = function(dt) me:update(dt) end
+  self.bounds = {
+    x = 0,
+    y = 0,
+    w = love.graphics:getWidth(),
+    h = love.graphics:getHeight()
+  }
 end
 
 function Game:add(o)
   if o.dead and o.id and not o:dead() then
     self.objects[o:id()] = o
+  else
+    print("Err: Not an object or dead")
   end
 end
 
@@ -23,19 +33,16 @@ end
 
 function Game:update(dt)
   for _, b in pairs(self.objects) do
-    b:update(self, dt)
-    if b:dead() then
+    if not b:dead() then
+      b:update(self, dt)
+    else
       self.objects[b:id()] = nil
     end
   end
+end
 
-  self.timeout = (self.timeout or 0.12) - dt
-  if love.keyboard.isDown("space") and self.timeout <= 0 then
-    local ball = Spitball()
-    ball:spit()
-    self:add(ball)
-    self.timeout = 0.1
-  end
+function Game:outside(go)
+  return not collides(self.bounds, go:bounds())
 end
 
 return Game()
