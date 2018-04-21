@@ -1,6 +1,6 @@
 
 local Game = require("game")
-require('playerhud')
+require('hud.playerhud')
 require('tester')
 require('catgenerator')
 

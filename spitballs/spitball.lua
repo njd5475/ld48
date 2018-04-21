@@ -3,9 +3,9 @@ local GameObject = require('gameobject')
 local Spitball = GameObject:derive("spitball")
 
 local SpitAudio = {}
-SpitAudio[0] = love.audio.newSource("spit-01.wav", "static")
-SpitAudio[1] = love.audio.newSource("spit-02.wav", "static")
-SpitAudio[2] = love.audio.newSource("spit-03.wav", "static")
+SpitAudio[0] = love.audio.newSource("music/spit-01.wav", "static")
+SpitAudio[1] = love.audio.newSource("music/spit-02.wav", "static")
+SpitAudio[2] = love.audio.newSource("music/spit-03.wav", "static")
 
 function Spitball:_init(x, y, dirX, dirY)
   GameObject._init(self)

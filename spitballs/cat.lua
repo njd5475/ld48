@@ -13,6 +13,8 @@ function Cat:_init()
   self.boundsY = function(o) return o.y end
   self.boundsWidth = function(o) return 20 end
   self.boundsHeight = function(o) return 20 end
+  self.radii = math.sqrt(self:boundsRadiiSq())
+  require('game'):addHud(require('hud.cathud')(self))
 end
 
 function Cat:update(game, dt)
@@ -29,10 +31,31 @@ function Cat:update(game, dt)
 end
 
 function Cat:draw(game)
+
+  love.graphics.setColor(200, 100, 200, 255)
+
+  -- ears
+  -- left
+  love.graphics.polygon("fill", self.x-self.radii, self.y, self.x-self.radii, self.y-6*self.radii/4, self.x, self.y-self.radii)
+  -- right
+  love.graphics.polygon("fill", self.x+self.radii, self.y, self.x+self.radii, self.y-6*self.radii/4, self.x, self.y-self.radii)
+
+  -- face
   love.graphics.setColor(255, 255, 255, 255)
-  love.graphics.ellipse("line", self.x, self.y, 20, 20)
-  love.graphics.setColor(0, 0, 255, 255)
-  love.graphics.rectangle("fill", self.x-self:boundsWidth(), self.y+self:boundsHeight()+10, 2*self:boundsWidth() * (self.health/self.maxHealth), 10)
+  love.graphics.ellipse("fill", self.x, self.y, self.radii, self.radii)
+
+  --eyes
+  love.graphics.setColor(100, 0, 0, 255)
+  local eyeDist = self.radii*0.1
+  local eyeSize = self.radii/2
+  -- right
+  love.graphics.arc("fill", self.x+eyeDist, self.y-eyeDist, eyeSize, 0, -math.pi/6, 20)
+  -- left
+  love.graphics.arc("fill", self.x-eyeDist, self.y-eyeDist, eyeSize, math.pi, math.pi+math.pi/6, 20)
+
+  love.graphics.setColor(20, 20, 20, 255)
+  local mouthSize = self.radii * 0.5
+  love.graphics.arc("fill", self.x, self.y+eyeDist, mouthSize, math.pi, 0, 20)
 end
 
 return Cat
