@@ -1,5 +1,5 @@
 
-local PlayerHud = require('gameobject'):derive()
+local PlayerHud = require('gameobject'):derive("playerhud")
 
 function PlayerHud:_init(player)
   require('gameobject')._init(self)

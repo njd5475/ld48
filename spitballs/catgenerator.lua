@@ -1,5 +1,5 @@
 
-local generator = require('gameobject'):derive()
+local generator = require('gameobject'):derive("catgenerator")
 
 local Cat = require('cat')
 

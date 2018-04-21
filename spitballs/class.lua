@@ -1,7 +1,7 @@
 
-function Clazz(Parent)
-  local Class = {}
-  Class.__index = Class
+function Class(Parent)
+  local Child = {}
+  Child.__index = Child
 
   local inheritance = {
     __call = function(cls, ...)
@@ -15,15 +15,13 @@ function Clazz(Parent)
     inheritance.__index = Parent
   end
 
-  setmetatable(Class, inheritance)
+  setmetatable(Child, inheritance)
 
-
-  function Class:derive()
-    return Clazz(self)
+  function Child:derive()
+    return Class(self)
   end
 
-  return Class
+  return Child
 end
 
-
-return Clazz
+return Class

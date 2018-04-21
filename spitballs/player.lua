@@ -1,5 +1,5 @@
 
-local Player = require('gameobject'):derive()
+local Player = require('gameobject'):derive("player")
 
 local SpitballMachine = require('spitballmachine')
 

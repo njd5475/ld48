@@ -19,3 +19,7 @@ function collides(bb1, bb2)
     inside(bb2, bb1.x, bb1.y+ bb1.h) or
     inside(bb2, bb1.x+bb1.w, bb1.y+bb1.h)
 end
+
+function distSq(x,y,x1,y1)
+  return (x-x1)(x-x1) + (y-y1)(y-y1)
+end

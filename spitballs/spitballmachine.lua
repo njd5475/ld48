@@ -1,5 +1,5 @@
 
-local machine = require('gameobject'):derive()
+local machine = require('gameobject'):derive("spitballmachine")
 
 function machine:_init()
   require('gameobject')._init(self)

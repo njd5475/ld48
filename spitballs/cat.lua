@@ -1,5 +1,5 @@
 
-local Cat = require('gameobject'):derive()
+local Cat = require('gameobject'):derive("cat")
 
 local Game = require('game')
 

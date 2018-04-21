@@ -1,10 +1,8 @@
 
-local Spitball = require('spitball')
-
-local SuperSpitball = require('class')(Spitball)
+local SuperSpitball = require('spitball'):derive("SuperSpitball")
 
 function SuperSpitball:_init()
-  print("This is my main")
+  require('spitball')._init(self)
   self:spit()
 end
 

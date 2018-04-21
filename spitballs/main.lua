@@ -1,7 +1,7 @@
 
 local Game = require("game")
 require('playerhud')
-require('spitballtest')
+require('tester')
 require('catgenerator')
 
 love.keyreleased = function(key)
