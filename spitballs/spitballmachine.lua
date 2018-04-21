@@ -6,6 +6,13 @@ local Vec = require('vec')
 function machine:_init()
   require('gameobject')._init(self)
   self.reloadTime = 0.5
+  self.w = 20
+  self.h = 20
+  self.boundsX = function(o) return o.x-o.w/2 end
+  self.boundsY = function(o) return o.y-o.h/2 end
+  self.boundsWidth = function(o) return o.w end
+  self.boundsHeight = function(o) return o.h end
+  self.boundsCenter = function(o) return o.x, o.y end
 end
 
 function machine:update(game, dt)
@@ -14,7 +21,7 @@ end
 
 function machine:draw(game)
   love.graphics.setColor(255, 255, 255, 255)
-  love.graphics.ellipse("fill", self.x, self.y, 20, 20)
+  love.graphics.ellipse("fill", self.x, self.y, self.w, self.h)
 
 end
 

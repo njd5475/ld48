@@ -20,6 +20,9 @@ GameObject.boundsX = function() return 0 end
 GameObject.boundsY = function() return 0 end
 GameObject.boundsWidth = function() return 0 end
 GameObject.boundsHeight = function() return 0 end
+GameObject.boundsCenter = function(o)
+  return o:boundsX() + o:boundsWidth() / 2, o:boundsY() + o:boundsHeight()/2
+end
 GameObject.boundsRadiiSq = function(o)
   return distSq(o:boundsX()+o:boundsWidth()/2,
     o:boundsY()+o:boundsHeight()/2, o:boundsX(), o:boundsY())

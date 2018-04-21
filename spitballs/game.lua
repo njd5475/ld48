@@ -16,6 +16,7 @@ function Game:_init()
     w = love.graphics:getWidth(),
     h = love.graphics:getHeight()
   }
+  self.gravity = 200 --639
   self.hud = {}
   self.player = require('player')()
   self:add(self.player)
@@ -35,6 +36,7 @@ function Game:update(dt)
   for _, b in pairs(self.objects) do
     if not b:dead() then
       b:update(self, dt)
+      self:fallOrStop(b, dt)
     else
       self.objects[b:id()] = nil
       self.types[b:type()][b:id()] = nil
@@ -46,6 +48,29 @@ function Game:update(dt)
       b:update(self, dt)
     else
       self.hud[b:id()] = nil
+    end
+  end
+end
+
+function Game:fallOrStop(o, dt)
+  if o.y then
+    if o.static then
+      return
+    end
+
+    local lastY = o.y
+    o.y = o.y + self.gravity * dt
+    if o.y > self.bounds.x + self.bounds.h and self:outside(o) then
+      print("Killing the " .. o:type() .. " because it dropped below the world")
+      o:kill()
+    else
+      local bounds = o:bounds()
+      local results = self:withinRange(o.x, o.y, o:boundsRadiiSq(), "platform")
+      for _, p in pairs(results) do
+        if collides(p:bounds(), bounds) then
+          o.y = lastY
+        end
+      end
     end
   end
 end
@@ -62,25 +87,6 @@ function Game:add(o)
   end
 end
 
-function Game:withinRange(x, y, rangeSq, type)
-  local results = {}
-  local objs = self.objects
-  if type then
-    objs = self.types[type]
-  end
-
-  if objs then
-    for _, o in pairs(objs) do
-      local dsq = distSq(o:boundsX(), o:boundsY(), x, y)
-      if (rangeSq+o:boundsRadiiSq()) >= dsq then
-        table.insert(results, o)
-      end
-    end
-  end
-
-  return results
-end
-
 function Game:addHud(o)
   if o.dead and o.id and not o:dead() then
     self.hud[o:id()] = o
@@ -91,6 +97,26 @@ end
 
 function Game:outside(go)
   return not collides(self.bounds, go:bounds())
+end
+
+function Game:withinRange(x, y, rangeSq, type)
+  local results = {}
+  local objs = self.objects
+  if type then
+    objs = self.types[type]
+  end
+
+  if objs then
+    for _, o in pairs(objs) do
+      local cx, cy = o:boundsCenter()
+      local dsq = distSq(cx, cy, x, y)
+      if (rangeSq+o:boundsRadiiSq()) >= dsq then
+        table.insert(results, o)
+      end
+    end
+  end
+
+  return results
 end
 
 return Game()

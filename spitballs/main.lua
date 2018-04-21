@@ -4,6 +4,8 @@ require('hud.playerhud')
 require('tester')
 require('catgenerator')
 
+require('levelloader')()
+
 love.keyreleased = function(key)
   if key == 'escape' then
     love.event.quit()

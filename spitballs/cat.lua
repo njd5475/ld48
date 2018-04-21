@@ -6,13 +6,14 @@ local Game = require('game')
 function Cat:_init()
   require('gameobject')._init(self)
   self.x, self.y = love.math.random(Game.bounds.w), love.math.random(Game.bounds.h)
-
+  self.w, self.h = 20, 20
   self.maxHealth = 100
   self.health = self.maxHealth
-  self.boundsX = function(o) return o.x end
-  self.boundsY = function(o) return o.y end
-  self.boundsWidth = function(o) return 20 end
-  self.boundsHeight = function(o) return 20 end
+  self.boundsX = function(o) return o.x-o.w/2 end
+  self.boundsY = function(o) return o.y-o.h/2 end
+  self.boundsWidth = function(o) return o.w end
+  self.boundsHeight = function(o) return o.h end
+  self.boundsCenter = function(o) return o.x, o.y end
   self.radii = math.sqrt(self:boundsRadiiSq())
   require('game'):addHud(require('hud.cathud')(self))
 end
