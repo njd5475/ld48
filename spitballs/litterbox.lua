@@ -18,7 +18,7 @@ function LitterBox:update(game, dt)
   self.timeout = (self.timeout or 1) - dt
   if self.timeout < 0 then
     game:add(Cat(self.x+self.w/2, self.y-30))
-    self.timeout = 1
+    self.timeout = 1.5
   end
 end
 
