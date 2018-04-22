@@ -12,6 +12,11 @@ function MilkAndCookies:_init(x,y)
   self.scaleX = self.w / 18
   self.scaleY = self.h / 18
   self.static = true
+  self.boundsX = function(o) return o.x-o.w/2 end
+  self.boundsY = function(o) return o.y-o.h/2 end
+  self.boundsWidth = function(o) return o.w end
+  self.boundsHeight = function(o) return o.h end
+  self.boundsCenter = function(o) return o.x, o.y end
 end
 
 function MilkAndCookies:draw(game)

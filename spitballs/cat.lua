@@ -1,6 +1,7 @@
 
 local Cat = require('gameobject'):derive("cat")
 
+local Vec = require('vec')
 local Game = require('game')
 
 function Cat:_init(x,y)
@@ -17,10 +18,26 @@ function Cat:_init(x,y)
   self.boundsCenter = function(o) return o.x, o.y end
   self.feet = function(o) return {{x=o.x, y=o.y+o.height}} end
   self.radii = math.sqrt(self:boundsRadiiSq())
+  self.dir = nil
   require('game'):addHud(require('hud.cathud')(self))
 end
 
 function Cat:update(game, dt)
+  local gotMilk = game:withinRange(self.x, self.y, self:boundsRadiiSq(), 'milkandcookies')
+  for _, m in pairs(gotMilk) do
+    m:kill()
+    game:catsGotMilk()
+  end
+
+  if not self.dir then
+    local milk = game:withinRange(self.x, self.y, 1000*1000, 'milkandcookies')
+    local meV = Vec(self.x, self.y)
+    local milkV = Vec(milk.x, milk.y)
+    self.dir = meV:sub(milkV)
+  end
+
+  self.x = self.x + self.dir.x * dt
+  self.y = self.y + self.dir.y * dt
 
   local spitballs = game:withinRange(self.x, self.y, self:boundsRadiiSq(), "spitball")
   for _, b in pairs(spitballs) do

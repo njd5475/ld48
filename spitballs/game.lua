@@ -20,6 +20,7 @@ function Game:_init()
   self.hud = {}
   self.player = require('player')()
   self:add(self.player)
+  self.gameOver = false
 end
 
 function Game:draw()
@@ -32,24 +33,31 @@ function Game:draw()
   for _, b in pairs(self.hud) do
     b:draw(self)
   end
+
+  if self.gameOver then
+    local f = love.graphics.getFont()
+    love.graphics.print("Game Over", love.graphics:getWidth()/2-f:getWidth("Game Over")/2 , love.graphics.getHeight()/2-f:getHeight())
+  end
 end
 
 function Game:update(dt)
-  for _, b in pairs(self.objects) do
-    if not b:dead() then
-      b:update(self, dt)
-      self:fallOrStop(b, dt)
-    else
-      self.objects[b:id()] = nil
-      self.types[b:type()][b:id()] = nil
+  if not self.gameOver then
+    for _, b in pairs(self.objects) do
+      if not b:dead() then
+        b:update(self, dt)
+        self:fallOrStop(b, dt)
+      else
+        self.objects[b:id()] = nil
+        self.types[b:type()][b:id()] = nil
+      end
     end
-  end
 
-  for _, b in pairs(self.hud) do
-    if not b:dead() then
-      b:update(self, dt)
-    else
-      self.hud[b:id()] = nil
+    for _, b in pairs(self.hud) do
+      if not b:dead() then
+        b:update(self, dt)
+      else
+        self.hud[b:id()] = nil
+      end
     end
   end
 end
@@ -123,6 +131,11 @@ function Game:withinRange(x, y, rangeSq, type)
   end
 
   return results
+end
+
+function Game:catsGotMilk()
+  print("Game Over")
+  self.gameOver = true
 end
 
 return Game()
