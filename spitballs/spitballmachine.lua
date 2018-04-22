@@ -54,7 +54,7 @@ function machine:shouldShootCats(game, dt)
 end
 
 function machine:adjustToPlatform(p)
-  self.y = p:topY() - self.h
+  self.y = p:topY() - self.height
 end
 
 return machine

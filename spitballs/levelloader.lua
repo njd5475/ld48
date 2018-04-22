@@ -9,6 +9,9 @@ function LevelLoader:_init(level)
 
   local Litterbox = require('litterbox')
   game:add(Litterbox(0, plat.y-50))
+
+  local MilkAndCookies = require('milkandcookies')
+  game:add(MilkAndCookies(plat.x+plat.w/2, plat.y-50))
 end
 
 return LevelLoader
