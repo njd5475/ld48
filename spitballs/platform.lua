@@ -9,6 +9,7 @@ function Platform:_init(x,y,w,h)
   self.boundsY = function(o) return o.y end
   self.boundsWidth = function(o) return o.w end
   self.boundsHeight = function(o) return o.h end
+  self.topY = function(o) return o.y end
 end
 
 function Platform:draw(game)

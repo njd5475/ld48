@@ -73,6 +73,7 @@ function Game:fallOrStop(o, dt)
         for _, p in pairs(results) do
           if inside(p:bounds(), f.x, f.y) then
             o.y = lastY
+            o:adjustToPlatform(p)
           end
         end
       end

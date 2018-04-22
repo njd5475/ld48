@@ -61,4 +61,9 @@ function Cat:draw(game)
   love.graphics.arc("fill", self.x, self.y+eyeDist, mouthSize, math.pi, 0, 20)
 end
 
+function Cat:adjustToPlatform(p)
+  local topY = p:topY()
+  self.y = topY - self.h
+end
+
 return Cat

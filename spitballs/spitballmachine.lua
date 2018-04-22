@@ -53,4 +53,8 @@ function machine:shouldShootCats(game, dt)
   end
 end
 
+function machine:adjustToPlatform(p)
+  self.y = p:topY() - self.h
+end
+
 return machine
