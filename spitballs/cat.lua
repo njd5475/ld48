@@ -37,7 +37,7 @@ function Cat:update(game, dt)
   end
 
   self.x = self.x + self.dir.x * dt
-  self.y = self.y + self.dir.y * dt
+  --self.y = self.y + self.dir.y * dt
 
   local spitballs = game:withinRange(self.x, self.y, self:boundsRadiiSq(), "spitball")
   for _, b in pairs(spitballs) do
@@ -81,6 +81,7 @@ end
 function Cat:adjustToPlatform(p)
   local topY = p:topY()
   self.y = topY - self.h
+  self:stop()
 end
 
 return Cat

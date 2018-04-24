@@ -64,24 +64,23 @@ end
 
 function Game:fallOrStop(o, dt)
   if o.y then
-    if o.static then
-      return
-    end
+    if o:moveable() then
 
-    local lastY = o.y
-    o.y = o.y + self.gravity * dt
-    if o.y > self.bounds.x + self.bounds.h and self:outside(o) then
-      print("Killing the " .. o:type() .. " because it dropped below the world")
-      o:kill()
-    else
-      local bounds = o:bounds()
-      local feet = o:feet()
-      for _, f in pairs(feet) do
-        local results = self:withinRange(f.x, f.y, o:boundsRadiiSq(), "platform")
-        for _, p in pairs(results) do
-          if inside(p:bounds(), f.x, f.y) then
-            o.y = lastY
-            o:adjustToPlatform(p)
+      local lastY = o.y
+      o.y = o.y + self.gravity * dt
+      if o.y > self.bounds.x + self.bounds.h and self:outside(o) then
+        print("Killing the " .. o:type() .. " because it dropped below the world")
+        o:kill()
+      else
+        local bounds = o:bounds()
+        local feet = o:feet()
+        for _, f in pairs(feet) do
+          local results = self:withinRange(f.x, f.y, o:boundsRadiiSq(), "platform")
+          for _, p in pairs(results) do
+            if inside(p:bounds(), f.x, f.y) then
+              o.y = lastY
+              o:adjustToPlatform(p)
+            end
           end
         end
       end

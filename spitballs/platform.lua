@@ -3,7 +3,7 @@ local Platform = require('gameobject'):derive("platform")
 
 function Platform:_init(x,y,w,h)
   require('gameobject')._init(self)
-  self.static = true
+  self:stop()
   self.x, self.y, self.w, self.h = x,y,w,h
   self.boundsX = function(o) return o.x end
   self.boundsY = function(o) return o.y end

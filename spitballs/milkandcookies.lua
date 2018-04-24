@@ -11,7 +11,7 @@ function MilkAndCookies:_init(x,y)
   self.w, self.h = 50, 50
   self.scaleX = self.w / 18
   self.scaleY = self.h / 18
-  self.static = true
+  self:stop()
   self.boundsX = function(o) return o.x-o.w/2 end
   self.boundsY = function(o) return o.y-o.h/2 end
   self.boundsWidth = function(o) return o.w end

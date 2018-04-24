@@ -21,6 +21,7 @@ function Spitball:_init(x, y, dirX, dirY)
   self.boundsWidth = function(o) return 5 end
   self.boundsHeight = function(o) return 5 end
   self:spit()
+  self:stop()
 end
 
 function Spitball:draw(game)

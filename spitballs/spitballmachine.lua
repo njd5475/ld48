@@ -15,6 +15,11 @@ function machine:_init()
   self.boundsHeight = function(o) return o.h end
   self.boundsCenter = function(o) return o.x, o.y end
   self.feet = function(o) return {{x=o.x, y=o.y+o.height}} end
+  if self:moveable() then
+    print("Spitball Machines are moveable")
+  else
+    print("Spitball Machines are not moveble")
+  end
 end
 
 function machine:update(game, dt)
@@ -45,7 +50,6 @@ function machine:shouldShootCats(game, dt)
     for _, c in pairs(catsNearBy) do
       local dir = Vec(c:boundsX(), c:boundsY()):sub(myVec):normalize()
       local sb = require('spitball')(self.x, self.y, dir.x, dir.y)
-      sb.static = true
       sb.speed = 500
       game:add(sb)
     end
@@ -55,6 +59,7 @@ end
 
 function machine:adjustToPlatform(p)
   self.y = p:topY() - self.height
+  --self:stop()
 end
 
 return machine

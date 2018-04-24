@@ -4,7 +4,7 @@ local LevelLoader = require('class')()
 function LevelLoader:_init(level)
   local game = require('game')
   local Platform = require('platform')
-  local plat = Platform(0, game.bounds.h-30, game.bounds.w, 20)
+  local plat = Platform(0, game.bounds.h-30, game.bounds.w, 50)
   game:add(plat)
 
   local Litterbox = require('litterbox')

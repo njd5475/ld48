@@ -8,7 +8,7 @@ function LitterBox:_init(x,y)
   require('gameobject')._init(self)
   self.x, self.y = (x or 0), (y or 0)
   self.w, self.h = 50, 50
-  self.static = true
+  self:stop()
   self.scaleX = self.w / 18
   self.scaleY = self.h / 18
   self.quad = love.graphics.newQuad(18, 0, 18, 18, img:getDimensions())
