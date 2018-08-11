@@ -6,6 +6,7 @@ require('engine.utils')
 function Game:_init(startState)
   assert(startState, "Cannot start a game with a nil state!")
   self.states = {}
+  self.bindings = {}
   local me = self
   love.draw = function() me:draw() end
   love.update = function(dt) me:update(dt) end
@@ -25,6 +26,31 @@ function Game:_init(startState)
   end
   self:addState(startState)
   self:changeState(startState:getName())
+end
+
+function Game:bindKeyPressed(key, action)
+  self:bind(key, 'pressed', action)
+end
+
+function Game:bindKeyReleased(key, action)
+  self:bind(key, 'released', action)
+end
+
+function Game:bind(key, method, action)
+  local binding = self.bindings[key]
+  if not binding then
+    binding = {}
+    self.bindings[key] = binding
+  end
+  binding[method] = function(key, game)
+    game:triggerAction(action)
+  end
+end
+
+function Game:triggerAction(action)
+  if self:current()[action] then
+    self:current()[action](self:current(), self)
+  end
 end
 
 function Game:addState(state)

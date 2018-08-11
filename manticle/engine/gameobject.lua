@@ -14,15 +14,15 @@ end
 GameObject.id = function(o) return o._id end
 GameObject.draw = function(game) end
 GameObject.dead = function(o) return o._dead end
-GameObject.update = function(game, dt) end
-GameObject.collide = function(gobj) end
+GameObject.update = function(o, game, dt) end
+GameObject.collide = function(o, gobj) end
 GameObject.kill = function(o) o._dead = true end
 GameObject.moveable = function(o) return o._moveable end
 GameObject.stop = function(o) o._moveable = false end
-GameObject.boundsX = function() return 0 end
-GameObject.boundsY = function() return 0 end
-GameObject.boundsWidth = function() return 0 end
-GameObject.boundsHeight = function() return 0 end
+GameObject.boundsX = function(o) return 0 end
+GameObject.boundsY = function(o) return 0 end
+GameObject.boundsWidth = function(o) return 0 end
+GameObject.boundsHeight = function(o) return 0 end
 GameObject.boundsCenter = function(o)
   return o:boundsX() + o:boundsWidth() / 2, o:boundsY() + o:boundsHeight()/2
 end
@@ -37,6 +37,9 @@ GameObject.type = function(o) return (o._type or "none") end
 GameObject.derive = function(o, type)
   local newClass = Class(o)
   if type then
+    if DEBUG_TYPES then
+      print("Deriving " .. type .. " from " .. (o._type or 'none'))
+    end
     newClass._type = type
   end
   return newClass

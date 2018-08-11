@@ -16,10 +16,34 @@ function MainMenu:init(game)
     self:add(HouseBrick(x*brickW, math.floor(game.bounds.h/brickH)*brickH, brickW, brickH))
   end
 
+  self.player = Player(5*brickW, 5*brickH, brickW, 2*brickH)
+  self:add(self.player)
+
   for y=0,math.floor(game.bounds.h/brickH) do
     self:add(HouseBrick(0, (y+1)*brickH, brickW, brickH))
     self:add(HouseBrick(math.ceil(game.bounds.w/brickW)*brickW-brickW, (y+1)*brickH, brickW, brickH))
   end
+
+  self:addKeyReleaseEvent('w', 'jump')
+  self:addKeyPressEvent('a', 'moveLeft')
+  self:addKeyPressEvent('d', 'moveRight')
+
+end
+
+function MainMenu:jump(key, game)
+  print("Main Menu State received a jump action")
+end
+
+function MainMenu:moveLeft(key, game, dt)
+  self:move(self.player, Vec(-1, 0), dt)
+end
+
+function MainMenu:moveRight(key, game, dt)
+  self:move(self.player, Vec(1, 0), dt)
+end
+
+function MainMenu:move(player, dir, dt)
+  player.x, player.y = Vec(player.x, player.y):add(dir:mult(dt):mult(player:speed())):unwrap()
 end
 
 function MainMenu:update(game, dt)
