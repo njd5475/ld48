@@ -22,11 +22,11 @@ $(MAC_VER): $(LOVE_FILE)
 	cd $(NAME) && love-release -D -M -W
 
 $(DIST)/.uploaded: $(WIN_32_VER) $(WIN_64_VER) $(DEB_VER) $(MAC_VER) $(LOVE_FILE)
-	butler push $(MAC_VER) "$(AUTHOR)/$(NAME):mac"
-	butler push $(WIN_32_VER) "$(AUTHOR)/$(NAME):win32"
-	butler push $(WIN_64_VER) "$(AUTHOR)/$(NAME):win64"
-	butler push $(DEB_VER) "$(AUTHOR)/$(NAME):deb"
-	butler push $(LOVE_FILE) "$(AUTHOR)/$(NAME):love"
+	butler push $(MAC_VER) "$(AUTHOR)/$(NAME):mac" --userversion=$(VERSION)
+	butler push $(WIN_32_VER) "$(AUTHOR)/$(NAME):win32" --userversion=$(VERSION)
+	butler push $(WIN_64_VER) "$(AUTHOR)/$(NAME):win64" --userversion=$(VERSION)
+	butler push $(DEB_VER) "$(AUTHOR)/$(NAME):deb" --userversion=$(VERSION)
+	butler push $(LOVE_FILE) "$(AUTHOR)/$(NAME):love" --userversion=$(VERSION)
 	touch $(DIST)/.uploaded
 
 clean:
