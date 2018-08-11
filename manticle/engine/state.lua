@@ -46,6 +46,7 @@ function State:withinRange(x, y, rangeSq, type)
     for _, o in pairs(objs) do
       local cx, cy = o:boundsCenter()
       local dsq = distSq(cx, cy, x, y)
+      print("Checked " .. cx .. ", " .. cy .. " " .. x .. ", " .. y .. " dist " .. dsq)
       if (rangeSq+o:boundsRadiiSq()) >= dsq then
         table.insert(results, o)
       end

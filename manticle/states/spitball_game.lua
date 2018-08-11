@@ -1,14 +1,12 @@
 
-require('engine.common')
-
-local GameState = Class(State)
+local HudState = require('states.hudstate')
+local GameState = HudState:derive()
 local PlayerHud = require('hud.playerhud')
 local Generator = require('objects.catgenerator')
 
 function GameState:_init()
-  State._init(self, "SpitballMain")
+  HudState._init(self, "SpitballMain")
   self.gravity = 319 --639 --200 --639
-  self.hud = {}
   self.player = require('objects.player')()
   self:add(self.player)
   self:add(PlayerHud(self.player))
@@ -21,12 +19,9 @@ function GameState:init(game)
 end
 
 function GameState:draw(game)
-  State.draw(self, game)
   love.graphics.setColor(150, 150, 245, 255)
   love.graphics.rectangle("fill", 0, 0, love.graphics:getWidth(), love.graphics:getHeight())
-  for _, b in pairs(self.objects) do
-    b:draw(self)
-  end
+  HudState.draw(self, game)
 
   for _, b in pairs(self.hud) do
     b:draw(self)
@@ -39,7 +34,6 @@ function GameState:draw(game)
 end
 
 function GameState:update(game, dt)
-  State.update(self, game, dt)
   if not self.gameOver then
     for _, b in pairs(self.objects) do
       if not b:dead() then
@@ -50,15 +44,8 @@ function GameState:update(game, dt)
         self.types[b:type()][b:id()] = nil
       end
     end
-
-    for _, b in pairs(self.hud) do
-      if not b:dead() then
-        b:update(self, dt)
-      else
-        self.hud[b:id()] = nil
-      end
-    end
   end
+  HudState.update(self, game, dt)
 end
 
 function GameState:fallOrStop(game, o, dt)
@@ -84,14 +71,6 @@ function GameState:fallOrStop(game, o, dt)
         end
       end
     end
-  end
-end
-
-function GameState:addHud(o)
-  if o.dead and o.id and not o:dead() then
-    self.hud[o:id()] = o
-  else
-    print("Err: Hud only accepts non-dead game objets")
   end
 end
 
