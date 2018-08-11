@@ -3,13 +3,13 @@ require('engine.common')
 
 local GameState = Class(State)
 local PlayerHud = require('hud.playerhud')
-local Generator = require('catgenerator')
+local Generator = require('objects.catgenerator')
 
 function GameState:_init()
   State._init(self, "SpitballMain")
   self.gravity = 319 --639 --200 --639
   self.hud = {}
-  self.player = require('player')()
+  self.player = require('objects.player')()
   self:add(self.player)
   self:add(PlayerHud(self.player))
 

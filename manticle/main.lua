@@ -2,8 +2,8 @@
 local initState = require('spitball_game')()
 local Game = require("engine.game")(initState)
 require('hud.playerhud')
-require('tester')
-require('catgenerator')
+require('objects.tester')
+require('objects.catgenerator')
 
 require('levelloader')(initState, Game)
 

@@ -1,7 +1,7 @@
 require('engine.common')
 local Player = GameObject:derive("player")
 
-local SpitballMachine = require('spitballmachine')
+local SpitballMachine = require('objects.spitballmachine')
 
 function Player:_init()
   GameObject._init(self)

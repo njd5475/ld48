@@ -49,7 +49,7 @@ function machine:shouldShootCats(game, dt)
     local catsNearBy = game:withinRange(self.x, self.y, 200*200, 'cat')
     for _, c in pairs(catsNearBy) do
       local dir = Vec(c:boundsX(), c:boundsY()):sub(myVec):normalize()
-      local sb = require('spitball')(self.x, self.y, dir.x, dir.y)
+      local sb = require('objects.spitball')(self.x, self.y, dir.x, dir.y)
       sb.speed = 500
       game:add(sb)
     end

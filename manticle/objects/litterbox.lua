@@ -1,6 +1,6 @@
 require('engine.common')
 local LitterBox = GameObject:derive("litterbox")
-local Cat = require('cat')
+local Cat = require('objects.cat')
 local img = require('thesheet')
 img:setFilter('nearest', 'nearest')
 
