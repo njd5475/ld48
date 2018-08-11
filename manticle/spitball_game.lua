@@ -1,29 +1,27 @@
 
-local Game = require("engine.class")()
+require('engine.common')
 
-require('engine.utils')
+local GameState = Class(State)
+local PlayerHud = require('hud.playerhud')
+local Generator = require('catgenerator')
 
-function Game:_init()
-  print("Initialize the game")
-  self.objects = {}
-  self.types = {}
-  local me = self
-  love.draw = function() me:draw() end
-  love.update = function(dt) me:update(dt) end
-  self.bounds = {
-    x = 0,
-    y = 0,
-    w = love.graphics:getWidth(),
-    h = love.graphics:getHeight()
-  }
+function GameState:_init()
+  State._init(self, "SpitballMain")
   self.gravity = 319 --639 --200 --639
   self.hud = {}
   self.player = require('player')()
   self:add(self.player)
+  self:add(PlayerHud(self.player))
+
   self.gameOver = false
 end
 
-function Game:draw()
+function GameState:init(game)
+  self:add(Generator(game))
+end
+
+function GameState:draw(game)
+  State.draw(self, game)
   love.graphics.setColor(150, 150, 245, 255)
   love.graphics.rectangle("fill", 0, 0, love.graphics:getWidth(), love.graphics:getHeight())
   for _, b in pairs(self.objects) do
@@ -40,12 +38,13 @@ function Game:draw()
   end
 end
 
-function Game:update(dt)
+function GameState:update(game, dt)
+  State.update(self, game, dt)
   if not self.gameOver then
     for _, b in pairs(self.objects) do
       if not b:dead() then
-        b:update(self, dt)
-        self:fallOrStop(b, dt)
+        b:update(game, dt)
+        self:fallOrStop(game, b, dt)
       else
         self.objects[b:id()] = nil
         self.types[b:type()][b:id()] = nil
@@ -62,13 +61,13 @@ function Game:update(dt)
   end
 end
 
-function Game:fallOrStop(o, dt)
+function GameState:fallOrStop(game, o, dt)
   if o.y then
     if o:moveable() then
 
       local lastY = o.y
       o.y = o.y + self.gravity * dt
-      if o.y > self.bounds.x + self.bounds.h and self:outside(o) then
+      if o.y > game.bounds.x + game.bounds.h and game:outside(o) then
         print("Killing the " .. o:type() .. " because it dropped below the world")
         o:kill()
       else
@@ -88,19 +87,7 @@ function Game:fallOrStop(o, dt)
   end
 end
 
-function Game:add(o)
-  if o.dead and o.id and not o:dead() then
-    self.objects[o:id()] = o
-    if not self.types[o:type()] then
-      self.types[o:type()] = {}
-    end
-    self.types[o:type()][o:id()] = o
-  else
-    print("Err: Game only accepts non-dead game objects")
-  end
-end
-
-function Game:addHud(o)
+function GameState:addHud(o)
   if o.dead and o.id and not o:dead() then
     self.hud[o:id()] = o
   else
@@ -108,33 +95,9 @@ function Game:addHud(o)
   end
 end
 
-function Game:outside(go)
-  return not collides(self.bounds, go:bounds())
-end
-
-function Game:withinRange(x, y, rangeSq, type)
-  local results = {}
-  local objs = self.objects
-  if type then
-    objs = self.types[type]
-  end
-
-  if objs then
-    for _, o in pairs(objs) do
-      local cx, cy = o:boundsCenter()
-      local dsq = distSq(cx, cy, x, y)
-      if (rangeSq+o:boundsRadiiSq()) >= dsq then
-        table.insert(results, o)
-      end
-    end
-  end
-
-  return results
-end
-
-function Game:catsGotMilk()
+function GameState:catsGotMilk()
   print("Game Over")
   self.gameOver = true
 end
 
-return Game()
+return GameState

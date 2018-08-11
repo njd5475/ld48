@@ -1,10 +1,9 @@
 
-local generator = require('engine.gameobject'):derive("catgenerator")
-
-local Cat = require('cat')
+require('engine.common')
+local generator = GameObject:derive("catgenerator")
 
 function generator:update(game, dt)
 
 end
 
-require('game'):add(generator())
+return generator

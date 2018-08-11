@@ -3,11 +3,10 @@ require('engine.common')
 local Cat = GameObject:derive("cat")
 
 local Vec = require('engine.vec')
-local Game = require('game')
 
-function Cat:_init(x,y)
+function Cat:_init(game, x, y)
   GameObject._init(self)
-  self.x, self.y = (x or love.math.random(Game.bounds.w)), (y or love.math.random(Game.bounds.h))
+  self.x, self.y = (x or love.math.random(game.bounds.w)), (y or love.math.random(game.bounds.h))
   self.w, self.h = 20, 20
   self.maxHealth = 100
   self.height = 20
@@ -20,14 +19,19 @@ function Cat:_init(x,y)
   self.feet = function(o) return {{x=o.x, y=o.y+o.height}} end
   self.radii = math.sqrt(self:boundsRadiiSq())
   self.dir = nil
-  require('game'):addHud(require('hud.cathud')(self))
+  self.hudAdded = false
 end
 
 function Cat:update(game, dt)
+  if not self.hudAdded then
+    game:current():addHud(require('hud.cathud')(self))
+    self.hudAdded = true
+  end
+
   local gotMilk = game:withinRange(self.x, self.y, self:boundsRadiiSq(), 'milkandcookies')
   for _, m in pairs(gotMilk) do
     m:kill()
-    game:catsGotMilk()
+    game:current():catsGotMilk()
   end
 
   if not self.dir then

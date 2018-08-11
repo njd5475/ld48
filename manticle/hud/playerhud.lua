@@ -1,5 +1,6 @@
 
 require('engine.common')
+
 local PlayerHud = GameObject:derive("playerhud")
 
 function PlayerHud:_init(player)
@@ -13,4 +14,4 @@ function PlayerHud:draw(game)
   love.graphics.print("Spitball Machines: " .. #self.player.machines, 0, love.graphics.getFont():getHeight())
 end
 
-require('game'):addHud(PlayerHud(require('game').player))
+return PlayerHud

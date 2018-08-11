@@ -17,4 +17,4 @@ function tester:update(game, dt)
   end
 end
 
-require('game'):add(tester())
+return tester

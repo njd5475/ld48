@@ -1,10 +1,11 @@
 
-local Game = require("game")
+local initState = require('spitball_game')()
+local Game = require("engine.game")(initState)
 require('hud.playerhud')
 require('tester')
 require('catgenerator')
 
-require('levelloader')()
+require('levelloader')(initState, Game)
 
 love.keyreleased = function(key)
   if key == 'escape' then
