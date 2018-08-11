@@ -1,12 +1,12 @@
 function love.conf(t)
 	t.releases = {
-		title = 'spitballs',
-		package = 'spitballs',
+		title = 'manticle',
+		package = 'manticle',
 		loveVersion = '0.10.2',
 		version = '0.0.1',
 		author = 'Nick',
 		email = 'AnorStudios@gmail.com',
-		description = 'Tower Defense Platformer',
+		description = 'Multiplayer Action',
 		homepage = 'https://anorstudios.itch.io/spitballs',
 		identifier = 'spitballs',
 		excludeFileList = { ''} ,
@@ -14,7 +14,7 @@ function love.conf(t)
 		projectDirectory = './',
 		releaseDirectory = '../dist',
 	}
-  t.title = "Spitballs"
+  t.title = "Manticle"
   t.window.width = 800
   t.window.height = 600
   t.window.highdpi = true

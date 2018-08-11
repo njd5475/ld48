@@ -1,10 +1,10 @@
 
-local machine = require('gameobject'):derive("spitballmachine")
+require('engine.common')
 
-local Vec = require('vec')
+local machine = GameObject:derive("spitballmachine")
 
 function machine:_init()
-  require('gameobject')._init(self)
+  GameObject._init(self)
   self.reloadTime = 0.5
   self.height = 70
   self.w = 20

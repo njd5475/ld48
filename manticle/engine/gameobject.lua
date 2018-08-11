@@ -1,6 +1,6 @@
 
-local GameObject = require("class")()
-require('utils')
+local GameObject = require("engine.class")()
+require('engine.utils')
 
 _GameObjectCount = 0
 

@@ -1,10 +1,10 @@
-
-local MilkAndCookies = require('gameobject'):derive('milkandcookies')
+require('engine.common')
+local MilkAndCookies = GameObject:derive('milkandcookies')
 
 local img = require('thesheet')
 
 function MilkAndCookies:_init(x,y)
-  require('gameobject')._init(self)
+  GameObject._init(self)
   self.image = img
   self.quad = love.graphics.newQuad(0, 0, 18, 18, img:getDimensions())
   self.x, self.y = (x or 0), (y or 0)

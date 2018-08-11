@@ -1,5 +1,5 @@
 
-local CatsEye = require('class')()
+local CatsEye = require('engine.class')()
 
 function CatsEye:_init(cat, side)
   self.cat = cat

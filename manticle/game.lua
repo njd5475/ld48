@@ -1,7 +1,7 @@
 
-local Game = require("class")()
+local Game = require("engine.class")()
 
-require('utils')
+require('engine.utils')
 
 function Game:_init()
   print("Initialize the game")

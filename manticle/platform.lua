@@ -1,8 +1,8 @@
-
-local Platform = require('gameobject'):derive("platform")
+require('engine.common')
+local Platform = GameObject:derive("platform")
 
 function Platform:_init(x,y,w,h)
-  require('gameobject')._init(self)
+  GameObject._init(self)
   self:stop()
   self.x, self.y, self.w, self.h = x,y,w,h
   self.boundsX = function(o) return o.x end

@@ -1,8 +1,9 @@
 
-local PlayerHud = require('gameobject'):derive("playerhud")
+require('engine.common')
+local PlayerHud = GameObject:derive("playerhud")
 
 function PlayerHud:_init(player)
-  require('gameobject')._init(self)
+  GameObject._init(self)
   self.player = player
 end
 

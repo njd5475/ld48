@@ -1,8 +1,8 @@
-
-local CatHud = require('gameobject'):derive('CatHud')
+require('engine.common')
+local CatHud = GameObject:derive('CatHud')
 
 function CatHud:_init(cat)
-  require('gameobject')._init(self)
+  GameObject._init(self)
   self.cat = cat
 end
 

@@ -1,11 +1,11 @@
-
-local LitterBox = require('gameobject'):derive("litterbox")
+require('engine.common')
+local LitterBox = GameObject:derive("litterbox")
 local Cat = require('cat')
 local img = require('thesheet')
 img:setFilter('nearest', 'nearest')
 
 function LitterBox:_init(x,y)
-  require('gameobject')._init(self)
+  GameObject._init(self)
   self.x, self.y = (x or 0), (y or 0)
   self.w, self.h = 50, 50
   self:stop()

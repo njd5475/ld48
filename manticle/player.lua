@@ -1,10 +1,10 @@
-
-local Player = require('gameobject'):derive("player")
+require('engine.common')
+local Player = GameObject:derive("player")
 
 local SpitballMachine = require('spitballmachine')
 
 function Player:_init()
-  require('gameobject')._init(self)
+  GameObject._init(self)
 
   self.machines = {}
   for i = 1, 10 do

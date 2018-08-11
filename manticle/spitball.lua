@@ -1,5 +1,5 @@
+require('engine.common')
 
-local GameObject = require('gameobject')
 local Spitball = GameObject:derive("spitball")
 
 local SpitAudio = {}

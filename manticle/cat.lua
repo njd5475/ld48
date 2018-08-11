@@ -1,11 +1,12 @@
 
-local Cat = require('gameobject'):derive("cat")
+require('engine.common')
+local Cat = GameObject:derive("cat")
 
-local Vec = require('vec')
+local Vec = require('engine.vec')
 local Game = require('game')
 
 function Cat:_init(x,y)
-  require('gameobject')._init(self)
+  GameObject._init(self)
   self.x, self.y = (x or love.math.random(Game.bounds.w)), (y or love.math.random(Game.bounds.h))
   self.w, self.h = 20, 20
   self.maxHealth = 100

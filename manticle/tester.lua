@@ -1,10 +1,10 @@
-
-local tester = require('gameobject'):derive()
+require('engine.common')
+local tester = GameObject:derive()
 
 local Spitball = require('spitball')
 
 function tester:_init()
-  require('gameobject')._init(self)
+  GameObject._init(self)
 end
 
 function tester:update(game, dt)

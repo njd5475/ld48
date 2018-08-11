@@ -1,5 +1,5 @@
-
-local LevelLoader = require('class')()
+require('engine.common')
+local LevelLoader = Class()
 
 function LevelLoader:_init(level)
   local game = require('game')
