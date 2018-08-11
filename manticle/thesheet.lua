@@ -1,5 +1,5 @@
 
-local TheSheet = love.graphics.newImage('sheet1.png')
+local TheSheet = love.graphics.newImage('images/sheet1.png')
 
 TheSheet:setFilter('nearest', 'nearest')
 
