@@ -1,5 +1,5 @@
 
-NAME = spitballs
+NAME = manticle
 DIST = dist
 VERSION = 0.0.1
 LOVE_FILE = $(DIST)/$(NAME).love
