@@ -15,6 +15,14 @@ function Game:_init(startState)
     w = love.graphics:getWidth(),
     h = love.graphics:getHeight()
   }
+  love.keyreleased = function(key)
+    if key == 'escape' then
+      love.event.quit()
+    elseif key == 's' then
+      local screenshot = love.graphics.newScreenshot();
+      screenshot:encode('png', os.time() .. '.png');
+    end
+  end
   self:addState(startState)
   self:changeState(startState:getName())
 end
