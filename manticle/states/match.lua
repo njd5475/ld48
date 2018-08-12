@@ -9,8 +9,8 @@ end
 
 function Match:init(game)
   for _, p in pairs(self.players) do
-    p.x = math.random(0, game.bounds.w)
-    p.y = math.random(0, game.bounds.h)
+    p.x = math.random(0, game.bounds.w-16)
+    p.y = math.random(0, game.bounds.h-32)
     self:add(p)
   end
 end
