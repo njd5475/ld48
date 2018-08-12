@@ -114,7 +114,6 @@ function MainMenu:renumeratePlayers()
   end
 end
 
-local joyInputs = {"x","y",'a','b','back','start','leftstick','rightstick','leftshoulder','rightshoulder','dpup','dpdown','dpleft','dpright'}
 function MainMenu:checkForInput(game)
   local someInput = false
   for _, joy in pairs(love.joystick.getJoysticks()) do

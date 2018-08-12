@@ -9,16 +9,22 @@ img:setFilter("nearest", "nearest")
 function Player:_init(x,y,w,h)
   Basic._init(self, {x=x,y=y,w=w,h=h}, {x=0,y=0,w=16,h=32}, img)
   self._speed = 100
-
+  self._immobile = false
 end
 
 function Player:update(game, dt)
 
-  if self.isMoving then
+  if self.isMoving and not self._immobile then
     self.x, self.y = Vec(self.x, self.y):add(self:getDirection():mult(dt*self:speed())):unwrap()
   end
 
-  self:updateInput(dt)
+  if not self._immobile then
+    self:updateInput(dt)
+  end
+end
+
+function Player:immobile()
+  self._immobile = true
 end
 
 function Player:setInput(mode, joy)
