@@ -3,12 +3,23 @@ require('common')
 local MainMenu = State:derive()
 local PlayerSelect = require('states.player_select')
 
+local loop = love.audio.newSource("music/crappyloop.ogg", "stream")
+loop:setVolume(0.5)
+loop:setLooping(true)
+
 function MainMenu:_init()
   State._init(self, 'MainMenu')
   self.playersAvailable = {}
 end
 
+function MainMenu:cleanup(game)
+  State.cleanup(game)
+
+  loop:stop()
+end
+
 function MainMenu:init(game)
+  loop:play()
   game:addState(PlayerSelect())
   love.graphics.setFont(LogoFont)
   local brickW, brickH = 16*3, 16*3
