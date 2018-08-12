@@ -13,7 +13,6 @@ function AnimatedSprite:_init(image, tileinfo, indices, duration)
   self.imgW, self.imgH = self.image:getDimensions()
   self.tileCols, self.tileRows = (self.imgW-tileinfo.startX)/(tileinfo.w+tileinfo.off.x), (self.imgH-tileinfo.startY)/(tileinfo.h+tileinfo.off.y)
   self.tileCols, self.tileRows = math.ceil(self.tileCols), math.ceil(self.tileRows)
-  print("Sheet dimensions " .. self.tileCols .. "x" .. self.tileRows)
   self.indices = indices
   self.duration = duration
   self.counter = self.duration
