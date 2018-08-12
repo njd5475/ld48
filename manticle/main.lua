@@ -1,4 +1,4 @@
 
 require('common')
-local initState = require('states.mainmenu')()
+local initState = require('states.player_select')()
 local game = Game(initState)

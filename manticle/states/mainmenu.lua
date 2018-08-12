@@ -1,14 +1,16 @@
 require('common')
 
 local MainMenu = State:derive()
-
-local LogoFont = love.graphics.newFont("fonts/press-start-2p/PressStart2P-Regular.ttf", 56)
+local PlayerSelect = require('states.player_select')
 
 function MainMenu:_init()
   State._init(self, 'MainMenu')
+  self.playersAvailable = {}
 end
 
 function MainMenu:init(game)
+  game:addState(PlayerSelect())
+  love.graphics.setFont(LogoFont)
   local brickW, brickH = 16*3, 16*3
   for x=0,math.ceil(game.bounds.w/(brickW)) do
     self:add(HouseBrick(x*brickW,0, brickW, brickH))
@@ -24,10 +26,15 @@ function MainMenu:init(game)
     self:add(HouseBrick(math.ceil(game.bounds.w/brickW)*brickW-brickW, (y+1)*brickH, brickW, brickH))
   end
 
-  self:addKeyReleaseEvent('w', 'jump')
-  self:addKeyPressEvent('a', 'moveLeft')
-  self:addKeyPressEvent('d', 'moveRight')
+  -- self:addKeyReleaseEvent('w', 'jump')
+  -- self:addKeyPressEvent('a', 'moveLeft')
+  -- self:addKeyPressEvent('d', 'moveRight')
 
+  self:renumeratePlayers()
+  self.player:setInput("keyboard")
+  for _, joy in pairs(self.playersAvailable) do
+    self.player:setInput("joystick", joy)
+  end
 end
 
 function MainMenu:jump(key, game)
@@ -35,15 +42,11 @@ function MainMenu:jump(key, game)
 end
 
 function MainMenu:moveLeft(key, game, dt)
-  self:move(self.player, Vec(-1, 0), dt)
+  self.player:moveLeft(game, dt)
 end
 
 function MainMenu:moveRight(key, game, dt)
-  self:move(self.player, Vec(1, 0), dt)
-end
-
-function MainMenu:move(player, dir, dt)
-  player.x, player.y = Vec(player.x, player.y):add(dir:mult(dt):mult(player:speed())):unwrap()
+  self.player:moveRight(game, dt)
 end
 
 function MainMenu:update(game, dt)
@@ -55,9 +58,17 @@ function MainMenu:update(game, dt)
   end
   if done then
     self.vinesCovered = true
+    game:listenForKey()
   end
 
-  self.increment = (self.increment or 0) + 1
+  self:renumeratePlayers()
+
+  if self.vinesCovered then
+    if self:checkForInput(game) then
+      game:stopListeningForKey()
+      game:changeState('PlayerSelect')
+    end
+  end
 end
 
 function MainMenu:draw(game)
@@ -65,12 +76,61 @@ function MainMenu:draw(game)
   love.graphics.setColor(255, 255, 255, 255)
 
   if self.vinesCovered then
-    local oldFont = love.graphics.getFont()
     love.graphics.setFont(LogoFont)
     local m = love.graphics.getFont():getWidth("Mantical")
-    love.graphics.print("Manticle", game.bounds.w/2-m/2, game.bounds.h/2-LogoFont:getHeight())
-    love.graphics.setFont(oldFont)
+    love.graphics.print("Manticle", game.bounds.w/2-m/2, game.bounds.h/2-love.graphics.getFont():getHeight())
+
+    love.graphics.setFont(LogoRegularFont)
+    local msg = "Press any button to start"
+    if #self.playersAvailable > 0 then
+      msg = "Someone press a button to start"
+    end
+    m = love.graphics.getFont():getWidth(msg)
+    love.graphics.print(msg, game.bounds.w/2-m/2, game.bounds.h/2+LogoFont:getHeight())
   end
+
+  local i = 1
+  local x = 0
+  local oldFont = love.graphics.getFont()
+  love.graphics.setFont(LogoRegularFont)
+  local f = love.graphics.getFont()
+  for _, p in pairs(self.playersAvailable) do
+    local x = (i-1)*16
+    love.graphics.setColor(255, 0, 0, 255)
+    love.graphics.rectangle("fill", x, 0, 16, 16)
+    love.graphics.setColor(200,200,200,255)
+    love.graphics.setLineWidth(2)
+    love.graphics.rectangle("line", x, 0, 16, 16)
+    love.graphics.print(i, x+ f:getWidth(i)/2, f:getHeight()/2)
+    i = i + 1
+  end
+  love.graphics.setFont(oldFont)
+end
+
+function MainMenu:renumeratePlayers()
+  self.playersAvailable = {}
+  for _, joy in pairs(love.joystick.getJoysticks()) do
+    self.playersAvailable[joy] = joy
+  end
+end
+
+local joyInputs = {"x","y",'a','b','back','start','leftstick','rightstick','leftshoulder','rightshoulder','dpup','dpdown','dpleft','dpright'}
+function MainMenu:checkForInput(game)
+  local someInput = false
+  for _, joy in pairs(love.joystick.getJoysticks()) do
+    for _, key in pairs(joyInputs) do
+      someInput = someInput or joy:isGamepadDown(key)
+    end
+  end
+
+  if not someInput then
+    for m=1,4 do
+      someInput = someInput or love.mouse.isDown(m)
+    end
+  end
+
+  someInput = someInput or game:wasKeyPressed()
+  return someInput
 end
 
 return MainMenu

@@ -13,6 +13,9 @@ end
 function State:init(game)
 end
 
+function State:cleanup(game)
+end
+
 function State:draw(game)
   for _, go in pairs(self.objects) do
     go:draw(game)
