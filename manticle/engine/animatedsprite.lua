@@ -86,7 +86,6 @@ function AnimatedSprite:buildQuads()
   for _, i in pairs(self.indices) do
     local y = math.floor((i-1) / self.tileCols)
     local x = (i-1) - (y*self.tileCols)
-    print("Animation quad " .. x .. ", " .. y)
     x,y = x*(self.tileinfo.w+self.tileinfo.off.x), y*(self.tileinfo.h+self.tileinfo.off.y)
     local q = love.graphics.newQuad(x, y, self.tileinfo.w, self.tileinfo.h, self.imgW, self.imgH)
     table.insert(self.quads, q)
