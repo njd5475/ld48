@@ -14,7 +14,7 @@ function MainMenu:init(game)
   local brickW, brickH = 16*3, 16*3
   for x=0,math.ceil(game.bounds.w/(brickW)) do
     self:add(HouseBrick(x*brickW,0, brickW, brickH))
-    self:add(Vine(x*brickW, 0, brickW, brickH))
+    self:add(Vine(x*brickW, 0, brickW, brickH, AnimatedSprite(TheSheet, {startX=1,startY=1,w=16,h=16,off={x=2,y=2}}, {6,9,10,9,7}, 5)))
     self:add(HouseBrick(x*brickW, math.floor(game.bounds.h/brickH)*brickH, brickW, brickH))
   end
 

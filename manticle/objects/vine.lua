@@ -10,6 +10,8 @@ function Vine:_init(x,y,w,h,grow)
   self.timeTillGrow = love.math.random(1,5)
   self.canGrow = true
   self.grow = grow
+  self.grow.duration = self.timeTillGrow
+  self.grow.counter = self.grow.duration
 end
 
 function Vine:draw(game)
