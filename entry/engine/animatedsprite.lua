@@ -23,6 +23,14 @@ function AnimatedSprite:_init(image, tileinfo, indices, duration)
   self:buildQuads()
 end
 
+function AnimatedSprite:makeLoop()
+  self.loop = true
+end
+
+function AnimatedSprite:stopLooping()
+  self.loop = false
+end
+
 function AnimatedSprite:draw(game)
   love.graphics.draw(self.image, self.quads[self:getQuadIndex()], 0, 0, 0, self.scaleX, self.scaleY)
 end

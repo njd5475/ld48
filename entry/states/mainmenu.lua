@@ -29,8 +29,12 @@ function MainMenu:init(game)
     self:add(HouseBrick(x*brickW, math.floor(game.bounds.h/brickH)*brickH, brickW, brickH))
   end
 
-  self.player = Player(5*brickW, 5*brickH, brickW, 2*brickH)
+  self.player = Player(5*brickW, 5*brickH, 2*brickW, 2*brickH)
   self:add(self.player)
+
+  self.altPlayer = AnimatedSprite(self.player.img, {startX=1,startY=1, w=32,h=32, off={x=0,y=0}}, {2,1,3,1}, 5)
+  self:add(self.altPlayer)
+  self.altPlayer:makeLoop()
 
   for y=0,math.floor(game.bounds.h/brickH) do
     self:add(HouseBrick(0, (y+1)*brickH, brickW, brickH))
