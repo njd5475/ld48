@@ -1,7 +1,7 @@
 # ld48
 My Ludum Dare entry for LD48 April 2021
 
-`Theme:` Deeper and Deeper
+*Theme:* `Deeper and Deeper`
 
 
 [My Ludum Dare Page](https://ldjam.com/users/zealous-coder/)
