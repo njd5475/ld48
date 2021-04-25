@@ -22,12 +22,14 @@ function MainMenu:init(game)
   loop:play()
   local room = Room()
   self:add(room)
-  self.player=  Player(0,0,64,64)
-  self:addKeyReleaseEvent('w', 'jump')
+  self.player =  Player(0,0,64,64)
   self:addKeyPressEvent('a', 'moveLeft')
   self:addKeyPressEvent('d', 'moveRight')
+  self:addKeyPressEvent('w', 'moveUp')
+  self:addKeyPressEvent('s', 'moveDown')
   self.player:setInput('keyboard')
   room:addItem(self.player, 2, 2)
+  self.room = room
 end
 
 function MainMenu:jump(key, game)
@@ -52,11 +54,19 @@ function MainMenu:getLevel()
 end
 
 function MainMenu:moveLeft(key, game, dt)
-  self.player:moveLeft(game, dt)
+  self.player:moveLeft(game, dt, self.room)
 end
   
 function MainMenu:moveRight(key, game, dt)
-  self.player:moveRight(game, dt)
+  self.player:moveRight(game, dt, self.room)
+end
+
+function MainMenu:moveUp(key, game, dt)
+  self.player:moveUp(game, dt, self.room)
+end
+
+function MainMenu:moveDown(key, game, dt)
+  self.player:moveDown(game, dt, self.room)
 end
 
 return MainMenu

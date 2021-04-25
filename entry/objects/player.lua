@@ -5,7 +5,7 @@ local Player = Basic:derive("player")
 local CharacterSheet = require('ld48sheet')
 
 function Player:_init(x,y,w,h)
-  Basic._init(self, {x=x,y=y,w=w,h=h}, {x=16*4,y=16*1,w=16,h=16}, CharacterSheet)
+  Basic._init(self, {x=x,y=y,w=w,h=h}, {x=16*5,y=16*1,w=16,h=16}, CharacterSheet)
   self._speed = 100
   self._immobile = false
 end
@@ -82,6 +82,14 @@ function Player:moveRight(game, dt)
   if self.scaleX > 0 then
     self.scaleX = -1 * self.scaleX
   end
+end
+
+function Player:moveUp(game, dt, room)
+
+end
+
+function Player:moveDown(game, dt, room)
+
 end
 
 function Player:move(player, dir, dt)

@@ -19,7 +19,7 @@ function Game:_init(startState)
   love.keyreleased = function(key)
     if key == 'escape' then
       love.event.quit()
-    elseif key == 's' then
+    elseif key == 'printscreen' then
       if love.graphics.newScreenshot then
         local screenshot = love.graphics.newScreenshot()
         screenshot:encode('png', self:getScreenshotName())
