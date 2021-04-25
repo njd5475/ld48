@@ -2,12 +2,10 @@ require('engine.common')
 local Basic = require('objects.basic')
 local Player = Basic:derive("player")
 
-local CharacterSheet = love.graphics.newImage("images/character-sheet.png")
-
-CharacterSheet:setFilter("nearest", "nearest")
+local CharacterSheet = require('ld48sheet')
 
 function Player:_init(x,y,w,h)
-  Basic._init(self, {x=x,y=y,w=w,h=h}, {x=0,y=0,w=32,h=32}, CharacterSheet)
+  Basic._init(self, {x=x,y=y,w=w,h=h}, {x=16*4,y=16*1,w=16,h=16}, CharacterSheet)
   self._speed = 100
   self._immobile = false
 end

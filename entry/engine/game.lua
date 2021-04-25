@@ -20,8 +20,12 @@ function Game:_init(startState)
     if key == 'escape' then
       love.event.quit()
     elseif key == 's' then
-      local screenshot = love.graphics.newScreenshot()
-      screenshot:encode('png', os.time() .. '.png')
+      if love.graphics.newScreenshot then
+        local screenshot = love.graphics.newScreenshot()
+        screenshot:encode('png', self:getScreenshotName())
+      elseif love.graphics.captureScreenshot then
+        love.graphics.captureScreenshot(self:getScreenshotName())
+      end
     end
     if self._listenForKey then
       self.keyPressed = true
@@ -29,6 +33,10 @@ function Game:_init(startState)
   end
   self:addState(startState)
   self:changeState(startState:getName())
+end
+
+function Game:getScreenshotName()
+  return os.time() .. '.png'
 end
 
 function Game:bindKeyPressed(key, action)

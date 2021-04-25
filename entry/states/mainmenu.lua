@@ -1,7 +1,8 @@
 require('common')
 
+local Room = require('objects.room')
+local Player = require('objects.player')
 local MainMenu = State:derive()
-local PlayerSelect = require('states.player_select')
 
 local loop = love.audio.newSource("music/crappyloop.ogg", "stream")
 loop:setVolume(0.5)
@@ -9,7 +10,6 @@ loop:setLooping(true)
 
 function MainMenu:_init()
   State._init(self, 'MainMenu')
-  self.playersAvailable = {}
 end
 
 function MainMenu:cleanup(game)
@@ -20,131 +20,43 @@ end
 
 function MainMenu:init(game)
   loop:play()
-  game:addState(PlayerSelect())
-  love.graphics.setFont(LogoFont)
-  local brickW, brickH = 16*3, 16*3
-  for x=0,math.ceil(game.bounds.w/(brickW)) do
-    self:add(HouseBrick(x*brickW,0, brickW, brickH))
-    self:add(Vine(x*brickW, 0, brickW, brickH, AnimatedSprite(TheSheet, {startX=1,startY=1,w=16,h=16,off={x=2,y=2}}, {6,9,10,9,7}, 5)))
-    self:add(HouseBrick(x*brickW, math.floor(game.bounds.h/brickH)*brickH, brickW, brickH))
-  end
-
-  self.player = Player(5*brickW, 5*brickH, 2*brickW, 2*brickH)
-  self:add(self.player)
-
-  self.altPlayer = AnimatedSprite(self.player.img, {startX=1,startY=1, w=32,h=32, off={x=0,y=0}}, {2,1,3,1}, 5)
-  self:add(self.altPlayer)
-  self.altPlayer:makeLoop()
-
-  for y=0,math.floor(game.bounds.h/brickH) do
-    self:add(HouseBrick(0, (y+1)*brickH, brickW, brickH))
-    self:add(HouseBrick(math.ceil(game.bounds.w/brickW)*brickW-brickW, (y+1)*brickH, brickW, brickH))
-  end
-
-  -- self:addKeyReleaseEvent('w', 'jump')
-  -- self:addKeyPressEvent('a', 'moveLeft')
-  -- self:addKeyPressEvent('d', 'moveRight')
-
-  self:renumeratePlayers()
-  self.player:setInput("keyboard")
-  for _, joy in pairs(self.playersAvailable) do
-    self.player:setInput("joystick", joy)
-  end
+  local room = Room()
+  self:add(room)
+  self.player=  Player(0,0,64,64)
+  self:addKeyReleaseEvent('w', 'jump')
+  self:addKeyPressEvent('a', 'moveLeft')
+  self:addKeyPressEvent('d', 'moveRight')
+  self.player:setInput('keyboard')
+  room:addItem(self.player, 2, 2)
 end
 
 function MainMenu:jump(key, game)
   print("Main Menu State received a jump action")
 end
 
-function MainMenu:moveLeft(key, game, dt)
-  self.player:moveLeft(game, dt)
-end
-
-function MainMenu:moveRight(key, game, dt)
-  self.player:moveRight(game, dt)
-end
-
 function MainMenu:update(game, dt)
   State.update(self, game, dt)
-  local done = true
-  for _, brick in pairs(self.types['HouseBrick']) do
-    local covered = brick:coveredWithVine(game)
-    done = done and covered
-  end
-  if done then
-    self.vinesCovered = true
-    game:listenForKey()
-  end
 
-  self:renumeratePlayers()
-
-  if self.vinesCovered then
-    if self:checkForInput(game) then
-      game:stopListeningForKey()
-      game:changeState('PlayerSelect')
-    end
-  end
 end
 
 function MainMenu:draw(game)
+  love.graphics.clear()
   State.draw(self, game)
-  love.graphics.setColor(255, 255, 255, 255)
-
-  if self.vinesCovered then
-    love.graphics.setFont(LogoFont)
-    local m = love.graphics.getFont():getWidth("Mantical")
-    love.graphics.print("Manticle", game.bounds.w/2-m/2, game.bounds.h/2-love.graphics.getFont():getHeight())
-
-    love.graphics.setFont(LogoRegularFont)
-    local msg = "Press any button to start"
-    if #self.playersAvailable > 0 then
-      msg = "Someone press a button to start"
-    end
-    m = love.graphics.getFont():getWidth(msg)
-    love.graphics.print(msg, game.bounds.w/2-m/2, game.bounds.h/2+LogoFont:getHeight())
-  end
-
-  local i = 1
-  local x = 0
-  local oldFont = love.graphics.getFont()
-  love.graphics.setFont(LogoRegularFont)
-  local f = love.graphics.getFont()
-  for _, p in pairs(self.playersAvailable) do
-    local x = (i-1)*16
-    love.graphics.setColor(255, 0, 0, 255)
-    love.graphics.rectangle("fill", x, 0, 16, 16)
-    love.graphics.setColor(200,200,200,255)
-    love.graphics.setLineWidth(2)
-    love.graphics.rectangle("line", x, 0, 16, 16)
-    love.graphics.print(i, x+ f:getWidth(i)/2, f:getHeight()/2)
-    i = i + 1
-  end
-  love.graphics.setFont(oldFont)
+  SetColor('depthCount')
+  love.graphics.setFont(LogoMidFont)
+  love.graphics.print(self:getLevel(), 10, 10)
 end
 
-function MainMenu:renumeratePlayers()
-  self.playersAvailable = {}
-  for _, joy in pairs(love.joystick.getJoysticks()) do
-    self.playersAvailable[joy] = joy
-  end
+function MainMenu:getLevel()
+  return 'Floor ' .. (self.level or 1)
 end
 
-function MainMenu:checkForInput(game)
-  local someInput = false
-  for _, joy in pairs(love.joystick.getJoysticks()) do
-    for _, key in pairs(joyInputs) do
-      someInput = someInput or joy:isGamepadDown(key)
-    end
-  end
-
-  if not someInput then
-    for m=1,4 do
-      someInput = someInput or love.mouse.isDown(m)
-    end
-  end
-
-  someInput = someInput or game:wasKeyPressed()
-  return someInput
+function MainMenu:moveLeft(key, game, dt)
+  self.player:moveLeft(game, dt)
+end
+  
+function MainMenu:moveRight(key, game, dt)
+  self.player:moveRight(game, dt)
 end
 
 return MainMenu

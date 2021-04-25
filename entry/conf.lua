@@ -15,8 +15,8 @@ function love.conf(t)
 		releaseDirectory = '../dist',
 	}
   t.title = "Manticle"
-  t.window.width = 800
-  t.window.height = 600
+  t.window.width = 1024
+  t.window.height = 768
   t.window.highdpi = true
   t.window.resizable = true
   t.externalstorage = true

@@ -20,6 +20,7 @@ end
 function Basic:draw(game)
   GameObject.draw(self, game)
   if self.img then
+    love.graphics.setColor(255, 255, 255, 255)
     love.graphics.draw(self.img, self.quad, self.x, self.y, 0, self.scaleX, self.scaleY)
   end
 end
