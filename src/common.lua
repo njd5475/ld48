@@ -5,7 +5,6 @@ LogoFont = love.graphics.newFont("fonts/press-start-2p/PressStart2P-Regular.ttf"
 LogoMidFont = love.graphics.newFont("fonts/press-start-2p/PressStart2P-Regular.ttf", 18)
 LogoRegularFont = love.graphics.newFont("fonts/press-start-2p/PressStart2P-Regular.ttf", 10)
 
-Player = require('objects.player')
 TheSheet = require('thesheet')
 
 -- Color pallette from https://lospec.com/palette-list/dustbyte
@@ -19,10 +18,12 @@ Colors={
   white={r=255, g=255, b=255},
   background=BaseColors.black,
   depthCount=BaseColors.redbrown,
+  debugLine=BaseColors.yellow,
 }
 
 function SetColor(colorName)
   local c = Colors[colorName]
+  assert(c, 'Color name does not exist ' .. colorName)
   love.graphics.setColor(c.r/255, c.g/255, c.b/255, 1.0)
 end
 

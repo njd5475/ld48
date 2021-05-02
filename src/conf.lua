@@ -1,7 +1,7 @@
 function love.conf(t)
 	t.releases = {
-		title = 'manticle',
-		package = 'manticle',
+		title = 'DeeperDungeon',
+		package = 'DeeperDungeon',
 		loveVersion = '0.10.2',
 		version = '0.0.1',
 		author = 'Nick',
@@ -14,7 +14,7 @@ function love.conf(t)
 		projectDirectory = './',
 		releaseDirectory = '../dist',
 	}
-  t.title = "Manticle"
+  t.title = "Deeper Dungeon"
   t.window.width = 1024
   t.window.height = 768
   t.window.highdpi = true

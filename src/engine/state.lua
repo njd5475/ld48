@@ -82,6 +82,11 @@ function State:remove(go)
   self.types[go:type()][go:id()] = nil
 end
 
+function State:removeAll()
+  self.objects = {}
+  self.types = {}
+end
+
 function State:getAction(event)
   return self.actions[event]
 end

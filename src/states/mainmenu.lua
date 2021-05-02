@@ -20,15 +20,24 @@ end
 
 function MainMenu:init(game)
   loop:play()
-  local room = Room()
-  self:add(room)
-  self.player =  Player(0,0,64,64)
+  self:createLevel()
+
   self:addKeyPressEvent('a', 'moveLeft')
   self:addKeyPressEvent('d', 'moveRight')
   self:addKeyPressEvent('w', 'moveUp')
   self:addKeyPressEvent('s', 'moveDown')
+end
+
+function MainMenu:createLevel()
+  local room = Room()
+  self:add(room)
+  local px, py = room:getRandomEmptyTile()
+  if(px < 0 or py < 0) then
+    print('Could not find a place for the player')
+  end
+  self.player =  Player(px*room:getTileWidth(), py*room:getTileHeight(),64,64)
   self.player:setInput('keyboard')
-  room:addItem(self.player, 2, 2)
+  room:addItem(self.player, px, py)
   self.room = room
 end
 
@@ -38,7 +47,12 @@ end
 
 function MainMenu:update(game, dt)
   State.update(self, game, dt)
+end
 
+function MainMenu:moveOnDown()
+  self:removeAll()
+  self.level = (self.level or 1) + 1
+  self:createLevel()
 end
 
 function MainMenu:draw(game)

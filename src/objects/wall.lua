@@ -13,4 +13,8 @@ function Wall:draw(game)
   Basic.draw(self, game)
 end
 
+function Wall:isBlocking()
+  return true
+end
+
 return Wall

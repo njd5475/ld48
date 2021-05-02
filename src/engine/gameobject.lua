@@ -34,6 +34,22 @@ GameObject.boundsRadiiSq = function(o)
 end
 GameObject.bounds = function(o) return {x=o:boundsX(), y=o:boundsY(), w=o:boundsWidth(), h=o:boundsHeight()} end
 GameObject.type = function(o) return (o._type or "none") end
+GameObject.is = function(o, ...)
+  if not ... then
+    return
+  end
+
+  if type(...) == 'string' then
+    return ... == o:type()
+  end
+
+  for _, a in ipairs(...) do
+    if a == o:type() then
+      return true
+    end
+  end
+  return false
+end
 GameObject.derive = function(o, type)
   local newClass = Class(o)
   if type then
