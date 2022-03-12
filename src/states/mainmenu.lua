@@ -2,6 +2,7 @@ require('common')
 
 local Room = require('objects.room')
 local Player = require('objects.player')
+local Builders = require('objects.builders')
 local MainMenu = State:derive()
 
 local loop = love.audio.newSource("music/crappyloop.ogg", "stream")
@@ -35,9 +36,10 @@ function MainMenu:createLevel()
   if(px < 0 or py < 0) then
     print('Could not find a place for the player')
   end
-  self.player =  Player(px*room:getTileWidth(), py*room:getTileHeight(),64,64)
+  self.player = Player(px*room:getTileWidth(), py*room:getTileHeight(),64,64)
   self.player:setInput('keyboard')
   room:addItem(self.player, px, py)
+  self:add(Builders.buildHeart(16*30,16, 32, 32))
   self.room = room
 end
 

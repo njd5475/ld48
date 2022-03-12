@@ -8,6 +8,7 @@ function Player:_init(x,y,w,h)
   Basic._init(self, {x=x,y=y,w=w,h=h}, {x=16*5,y=16*1,w=16,h=16}, CharacterSheet)
   self._speed = 100
   self._immobile = false
+  self.health = 4
 end
 
 function Player:draw(game, room)

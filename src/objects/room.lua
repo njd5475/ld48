@@ -1,7 +1,7 @@
 require('engine.common')
 
 local Room = GameObject:derive('Room')
-local Stairs = require('objects.stairs')
+local Builders = require('objects.builders')
 local Wall = require('objects.wall')
 
 function Room:_init(x,y,w,h)
@@ -115,7 +115,14 @@ function Room:placeStairs()
     j, i = self:getRandomTile() 
     local there = self:getItems(j, i)
     if not there then
-      local stairs = Stairs(j*tileW, i*tileH, tileW, tileH)
+      local collide = function(stair, hitObj, game)
+        print("Got a collision")
+        if hitObj:is('player') then
+          game:current():moveOnDown()
+        end
+      end
+      local stairs = Builders.buildStairs(j*tileW, i*tileH, tileW, tileH, collide)
+      stairs:markCollidable()
       self:addItem(stairs, j, i)
       added = true
     end
