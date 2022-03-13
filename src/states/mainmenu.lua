@@ -39,7 +39,6 @@ function MainMenu:createLevel()
   self.player = Player(px*room:getTileWidth(), py*room:getTileHeight(),64,64)
   self.player:setInput('keyboard')
   room:addItem(self.player, px, py)
-  self:add(Builders.buildHeart(16*30,16, 32, 32))
   self.room = room
 end
 
@@ -49,6 +48,7 @@ end
 
 function MainMenu:update(game, dt)
   State.update(self, game, dt)
+  self.player:update(game, dt)
 end
 
 function MainMenu:moveOnDown()

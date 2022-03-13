@@ -17,5 +17,6 @@ end
 
 return {
     buildStairs=inSheet(img, 4, 0, 16),
-    buildHeart=inSheet(img, 6, 2, 16)
+    buildHeart=inSheet(img, 6, 2, 16),
+    buildHeart2=inSheet(img, 5, 2, 16),
 }
