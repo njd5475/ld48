@@ -24,9 +24,13 @@ function MainMenu:init(game)
   self:createLevel()
 
   self:addKeyPressEvent('a', 'moveLeft')
+  self:addKeyReleaseEvent('a', 'stopMovingLeft')
   self:addKeyPressEvent('d', 'moveRight')
+  self:addKeyReleaseEvent('d', 'stopMovingRight')
   self:addKeyPressEvent('w', 'moveUp')
+  self:addKeyReleaseEvent('w', 'stopMovingUp')
   self:addKeyPressEvent('s', 'moveDown')
+  self:addKeyReleaseEvent('s', 'stopMovingDown')
 end
 
 function MainMenu:createLevel()
@@ -48,7 +52,7 @@ end
 
 function MainMenu:update(game, dt)
   State.update(self, game, dt)
-  self.player:update(game, dt)
+  self.player:update(game, dt, self.room)
 end
 
 function MainMenu:moveOnDown()
@@ -72,17 +76,35 @@ end
 function MainMenu:moveLeft(key, game, dt)
   self.player:moveLeft(game, dt, self.room)
 end
+
+function MainMenu:stopMovingLeft(key, game, dt)
+  self.player:stopMovingLeft(game, dt, self.room)
+end
   
 function MainMenu:moveRight(key, game, dt)
   self.player:moveRight(game, dt, self.room)
+end
+
+function MainMenu:stopMovingRight(key, game, dt)
+  self.player:stopMovingRight(game, dt, self.room)
+  print("Stop moving ")
 end
 
 function MainMenu:moveUp(key, game, dt)
   self.player:moveUp(game, dt, self.room)
 end
 
+function MainMenu:stopMovingUp(key, game, dt)
+  print("Stop moving up")
+  self.player:stopMovingUp(game, dt, self.room)
+end
+
 function MainMenu:moveDown(key, game, dt)
   self.player:moveDown(game, dt, self.room)
+end
+
+function MainMenu:stopMovingDown(key, game, dt)
+  self.player:stopMovingDown(game, dt, self.room)
 end
 
 return MainMenu

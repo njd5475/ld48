@@ -27,7 +27,7 @@ function RampTest:draw(game)
 
     self.inEase = self.inEase or Tween.easing.inOutElastic
     self.outEase = self.outEase or Tween.easing.outQuint
-    self.dur = self.dur or 1
+    self.dur = self.dur or 0.5
     self.color = self.color or {red=0, green=0, blue=0, alpha=0}
     self.tweener = self.tweener or Tween.new(self.dur, self.color, {red=0.8, green=0.8, blue=0.8, alpha=1}, self.inEase)
     if self.reverse then
@@ -48,8 +48,6 @@ function RampTest:draw(game)
     local c = self.color
     g.setColor(c.red, c.green, c.blue, c.alpha)
     g.draw(t.img, t.quad, 0, 0, 0, t.scaleX, t.scaleY)
-    -- g.setColor(0, 0, 0, 0)
-    -- g.rectangle("fill", 0, 0, b.w, b.h)
 end
 
 function RampTest:init(game)

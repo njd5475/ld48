@@ -116,7 +116,6 @@ function Room:placeStairs()
     local there = self:getItems(j, i)
     if not there then
       local collide = function(stair, hitObj, game)
-        print("Got a collision")
         if hitObj:is('player') then
           game:current():moveOnDown()
         end

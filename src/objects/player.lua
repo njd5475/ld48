@@ -92,14 +92,19 @@ function Player:disableTweener(heart, game, g)
   t.enabled = false
 end
 
-function Player:update(game, dt)
+function Player:update(game, dt, room)
 
   if self.isMoving and not self._immobile then
     self.x, self.y = Vec(self.x, self.y):add(self:getDirection():mult(dt*self:speed())):unwrap()
   end
 
+  self:move(Vec(self.dirX or 0, self.dirY or 0), dt, room)
+  self:checkMoveRevert(room, game)
+  self.dirX = 0
+  self.dirY = 0
+
   if not self._immobile then
-    self:updateInput(dt)
+    --self:updateInput(dt)
   end
 
   for i,h in ipairs(self.hearts) do
@@ -160,26 +165,39 @@ function Player:speed()
 end
 
 function Player:moveLeft(game, dt, room)
-  self:move(self, Vec(-1, 0), dt, room)
-  self:checkMoveRevert(room, game)
+  self.dirX = -1
+end
+
+function Player:stopMovingLeft(game, dt, room)
+  self.dirX = 0
 end
 
 function Player:moveRight(game, dt, room)
-  self:move(self, Vec(1, 0), dt, room)
-  self:checkMoveRevert(room, game)
+  self.dirX = 1
+end
+
+function Player:stopMovingRight(game, dt, room)
+  self.dirX = 0
 end
 
 function Player:moveUp(game, dt, room)
-  self:move(self, Vec(0, -1), dt, room)
-  self:checkMoveRevert(room, game)
+  self.dirY = -1
+end
+
+function Player:stopMovingUp(game, dt, room)
+  self.dirY = 0
 end
 
 function Player:moveDown(game, dt, room)
-  self:move(self, Vec(0, 1), dt, room)
-  self:checkMoveRevert(room, game)
+  self.dirY = 1
 end
 
-function Player:move(player, dir, dt, room)
+function Player:stopMovingDown(game, dt, room)
+  self.dirY = 0
+end
+
+function Player:move(dir, dt, room)
+  local player = self
   player.lastX, player.lastY = player.x, player.y
   player.x, player.y = Vec(player.x, player.y):add(dir:mult(dt):mult(player:speed())):unwrap()
 end
@@ -204,6 +222,9 @@ function Player:checkMoveRevert(room, game)
 
   if isBlocked then
     self:revert()
+    self.dirX = 0
+    self.dirY = 0
+    self._immobile = true
   end
 end
 
