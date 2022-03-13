@@ -103,7 +103,7 @@ function State:handleInputActions(game, dt)
     if keyState.wasDown and not action.isDown(keyState.key) then
       keyState.wasDown = false
       table.insert(actions, {action=action, obj=keyState.key})
-    elseif keyState.wasDown and action.isDown(keyState.key) then
+    elseif keyState.wasDown or action.isDown(keyState.key) then
       keyState.wasDown = true
     end
   end

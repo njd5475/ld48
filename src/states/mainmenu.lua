@@ -87,7 +87,6 @@ end
 
 function MainMenu:stopMovingRight(key, game, dt)
   self.player:stopMovingRight(game, dt, self.room)
-  print("Stop moving ")
 end
 
 function MainMenu:moveUp(key, game, dt)
@@ -95,7 +94,6 @@ function MainMenu:moveUp(key, game, dt)
 end
 
 function MainMenu:stopMovingUp(key, game, dt)
-  print("Stop moving up")
   self.player:stopMovingUp(game, dt, self.room)
 end
 

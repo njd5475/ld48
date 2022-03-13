@@ -100,8 +100,6 @@ function Player:update(game, dt, room)
 
   self:move(Vec(self.dirX or 0, self.dirY or 0), dt, room)
   self:checkMoveRevert(room, game)
-  self.dirX = 0
-  self.dirY = 0
 
   if not self._immobile then
     --self:updateInput(dt)
