@@ -5,6 +5,20 @@ local Player = Basic:derive("player")
 
 local CharacterSheet = require('ld48sheet')
 
+function buildCanvas(img, quad, tw, th)
+  local canvas = love.graphics.newCanvas(tw, th)
+  canvas:setFilter('linear', 'nearest')
+  love.graphics.setCanvas(canvas)
+  love.graphics.draw(img, quad, 0, 0, 0, 1, 1)
+  local stmode, stalphamode = love.graphics.getBlendMode()
+  love.graphics.setBlendMode('add', 'alphamultiply')
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.rectangle("fill", 0, 0, tw, th)
+  love.graphics.setCanvas()
+  love.graphics.setBlendMode(stmode, stalphamode)
+  return canvas
+end
+
 function Player:_init(x,y,w,h)
   Basic._init(self, {x=x,y=y,w=w,h=h}, {x=16*3,y=16*1,w=16,h=16}, CharacterSheet)
   self._speed = 100
@@ -22,33 +36,28 @@ function Player:_init(x,y,w,h)
       init=function(self)
         if not self.initialized then
           self.oldC = {r=1, g=1, b=1, a=0}
-          self.color = {r=0, g=0, b=0, a=0}
-          self.tweener = Tween.new(2, self.color, {r=1, g=1, b=1, a=0}, Tween.easing.outSine)
+          self.color = {r=1, g=1, b=1, a=0}
+          self.tweener = Tween.new(2, self.color, {r=1, g=1, b=1, a=1}, Tween.easing.outQuint)
           self.initialized = true
+          self.canvas = buildCanvas(heart.img, heart.quad, 16, 16)
         end
       end,
       before=function(self, game, g)
         self:init()
         self.oldC.r, self.oldC.g, self.oldC.b, self.oldC.a = g:getColor()
-        --g.setColor(self.color.r, self.color.g, self.color.b, self.color.a)
         local h = self.heart
         local b = h:bounds()
         local c = self.color
         self.blendmode = g.getBlendMode()
-        -- g.setBlendMode('add', 'premultiplied')
-        -- g.setColor(1,1,1,1)
       end,
       after=function(self, game, g)
         self:init()
         local h = self.heart
         local b = h:bounds()
         local c = self.color
-        -- self.blendmode = g:getBlendMode()
-        -- g.setBlendMode("multiply", "premultiplied")
-        -- self.oldC.r, self.oldC.g, self.oldC.b, self.oldC.a = g:getColor()
-        -- g.setColor(c.r, c.g, c.b, c.a)
-        -- g.rectangle('fill', b.x, b.y, b.w, b.h)
-        -- g.setBackgroundColor(self.oldC.r, self.oldC.g, self.oldC.b, self.oldC.a)
+        g.setBlendMode('add', 'alphamultiply')
+        g.setColor(self.color.r, self.color.g, self.color.b, self.color.a)
+        g.draw(self.canvas, self.heart.x, self.heart.y, 0, 2, 2)
         g.setBlendMode(self.blendmode or 'alpha')
       end,
       update=function(self, game, dt)

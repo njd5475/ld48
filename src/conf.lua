@@ -15,7 +15,7 @@ function love.conf(t)
 		releaseDirectory = '../dist',
 	}
   t.title = "Deeper Dungeon"
-  t.window.fullscreen = true         -- Enable fullscreen (boolean)
+  t.window.fullscreen = false         -- Enable fullscreen (boolean)
   t.window.fullscreentype = "desktop" -- Choose between "desktop" fullscreen or "exclusive" fullscreen mode (string)  
   t.window.width = 1024
   t.window.height = 768
