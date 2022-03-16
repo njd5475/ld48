@@ -14,9 +14,17 @@ function inSheet(type, img, col, row, size)
     end
 end
 
+function wrap(buildFn, wrapFn, args)
+    return function(x, y, w, h, onCollision)
+        local obj = buildFn(x,y,w,h,onCollision)
+        return wrapFn(obj, args)
+    end
+end
+
 return {
     buildStairs=inSheet("Stairs", img, 4, 0, 16),
     buildHeart=inSheet("Heart", img, 5, 2, 16),
     buildHeart2=inSheet("Heart2", img, 4, 2, 16),
     buildHeartBroken=inSheet("HeartBroken", img, 6, 2, 16),
+    buildSpider=inSheet("Spider", img, 7, 1, 16),
 }

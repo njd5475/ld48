@@ -6,6 +6,7 @@ function Basic:_init(bounds, sprite, img, type)
   GameObject._init(self)
   self.img = img
   self.name = type or 'basic'
+  self._type = type
   if self.img then
     self.quad = love.graphics.newQuad(sprite.x, sprite.y, sprite.w, sprite.h, img:getDimensions())
   end

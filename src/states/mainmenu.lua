@@ -62,7 +62,7 @@ function MainMenu:moveOnDown()
 end
 
 function MainMenu:draw(game)
-  love.graphics.clear()
+  love.graphics.clear(1/255, 0/255, 3/255, 0)
   State.draw(self, game)
   SetColor('depthCount')
   love.graphics.setFont(LogoMidFont)
