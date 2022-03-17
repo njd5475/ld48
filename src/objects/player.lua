@@ -42,8 +42,15 @@ function Player:_init(x,y,w,h)
 end
 
 function Player:damage(amount)
-  local h = self.hearts[1]
-  h:damage(amount)
+  if #self.hearts then
+    local h = self.hearts[1]
+
+    h:damage(amount)
+    if h:dead() then
+      print("Remove a heart :(")
+      table.remove(self.hearts, 1)
+    end
+  end
 end
 
 function Player:draw(game, room)

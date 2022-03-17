@@ -13,8 +13,10 @@ function Room:_init(x,y,w,h)
   self:buildFrame()
   self:placeStairs()
   self:placeItemRandomly(Builders.buildSpider, 
-  function(item, player, game)
-    player:damage(SPIDER_ATTACK)
+  function(spider, player, game)
+    if spider.canAttack and spider:canAttack() then
+      player:damage(SPIDER_ATTACK)
+    end
   end)
 end
 

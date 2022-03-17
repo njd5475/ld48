@@ -12,6 +12,10 @@ function Damageable:_init(obj, health, onDamage)
     self.getHealth = function(s) return s.health end
 end
 
+function Damageable:dead()
+    return self.health <= 0
+end
+
 function Damageable:update(game, dt, room)
     GameObject.update(self, game, dt, room)
     self.obj:update(game, dt, room)
