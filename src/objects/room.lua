@@ -3,8 +3,7 @@ require('engine.common')
 local Room = GameObject:derive('Room')
 local Builders = require('objects.builders')
 local Wall = require('objects.wall')
-
-local SPIDER_ATTACK = 10
+local Items = require('items')
 
 function Room:_init(x,y,w,h)
   GameObject._init(self)
@@ -12,12 +11,12 @@ function Room:_init(x,y,w,h)
   self.props = {w=10, h=10, tileW=64, tileH=64}
   self:buildFrame()
   self:placeStairs()
-  self:placeItemRandomly(Builders.buildSpider, 
-  function(spider, player, game)
-    if spider.canAttack and spider:canAttack() then
-      player:damage(SPIDER_ATTACK)
-    end
+  local spider, j, i = self:placeItemRandomly(Builders.buildSpider, 
+  function(spider, player, game, dt)
+    spider:attack(player, dt)
   end)
+  spider = Attackable(Damageable(spider), Items.SpiderSting, 10)
+  self:addItem(spider, j, i)
 end
 
 function Room:getWidth()
@@ -121,24 +120,26 @@ function Room:placeStairs()
       game:current():moveOnDown()
     end
   end
-  self:placeItemRandomly(Builders.buildStairs, collide)
+  local item, j, i = self:placeItemRandomly(Builders.buildStairs, collide)
+  self:addItem(item, j, i)
 end
 
 function Room:placeItemRandomly(buildFn, collide)
   local tileW, tileH = self:getTileWidth(), self:getTileHeight()
   local j, i = 0, 0
   local added = false
+  local item = nil
   repeat 
     j, i = self:getRandomTile() 
     local there = self:getItems(j, i)
     if not there then
-      local item = buildFn(j*tileW, i*tileH, tileW, tileH, collide)
+      item = buildFn(j*tileW, i*tileH, tileW, tileH, collide)
       if collide then
         item:markCollidable()
       end
       print("Adding " .. item:type())
-      self:addItem(item, j, i)
       added = true
+      return item, j, i
     end
   until added
 end

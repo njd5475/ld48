@@ -1,4 +1,4 @@
-require('common')
+require('engine.common')
 
 local Damageable = GameObject:derive()
 

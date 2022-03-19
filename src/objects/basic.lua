@@ -23,7 +23,7 @@ function Basic:_init(bounds, sprite, img, type)
   self.unmarkCollidable = function(o) o._canCollide = false end
 end
 
-function Basic:doCollision(hitObj, game)
+function Basic:doCollision(hitObj, game, dt)
 end
 
 function Basic:draw(game)

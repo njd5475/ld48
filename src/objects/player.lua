@@ -67,7 +67,7 @@ function Player:update(game, dt, room)
   end
 
   self:move(Vec(self.dirX or 0, self.dirY or 0), dt, room)
-  self:checkMoveRevert(room, game)
+  self:checkMoveRevert(game, dt, room)
 
   if not self._immobile then
     --self:updateInput(dt)
@@ -170,7 +170,7 @@ function Player:revert()
   self.x, self.y = self.lastX, self.lastY
 end
 
-function Player:checkMoveRevert(room, game)
+function Player:checkMoveRevert(game, dt, room)
   local isBlocked, byItems = room:isBlocked(self)
   if byItems then
     -- check here for collisions
@@ -178,7 +178,7 @@ function Player:checkMoveRevert(room, game)
     if byItems and #byItems > 0 then
       for key, item in ipairs(byItems) do
         if item.canCollide and item:canCollide() then
-          item:doCollision(self, game)
+          item:doCollision(self, game, dt)
         end
       end
     end

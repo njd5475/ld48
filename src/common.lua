@@ -31,3 +31,7 @@ function SetClearColor(colorName)
   local c = Colors[colorName]
   love.graphics.clear(c.r/255, c.g/255, c.b/255, 1.0)
 end
+
+Damageable = require('effects.damageable')
+Attackable = require('effects.attackable')
+Pulse = require('effects.pulse')

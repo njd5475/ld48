@@ -5,9 +5,9 @@ local img = require('ld48sheet')
 function inSheet(type, img, col, row, size)
     return function(x, y, w, h, onCollision)
         local obj = Basic({x=x, y=y, w=w or size, h=h or size}, {x=size*col, y=size*row, w=size, h=size}, img, type)
-        function obj:doCollision(hitObj, game)
+        function obj:doCollision(hitObj, game, dt)
             if onCollision then
-                onCollision(self, hitObj, game)
+                onCollision(self, hitObj, game, dt)
             end
         end
         return obj

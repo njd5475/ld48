@@ -1,4 +1,4 @@
-require('common')
+require('engine.common')
 
 local Pulse = GameObject:derive("Pulse")
 local Builders = require('objects.builders')
