@@ -65,8 +65,21 @@ function State:getName()
   return self.name
 end
 
+function State:incrementSize()
+  self.size = (self.size or 0) + 1
+end
+
+function State:decrementSize()
+  self.size = math.max(0, (self.size or 1) - 1) -- never go negative
+end
+
+function State:getNumberOfObjects()
+  return self.size
+end
+
 function State:add(o)
   if o.dead and o.id and not o:dead() then
+    self:incrementSize()
     self.objects[o:id()] = o
     if not self.types[o:type()] then
       self.types[o:type()] = {}
