@@ -5,7 +5,8 @@ local Pulse = require('effects.pulse')
 local Damageable = require('effects.damageable')
 local Player = Basic:derive("player")
 
-local CharacterSheet = require('ld48sheet')
+local CharacterSheet = require('main-sheet')
+local COL, ROW = 0, 1
 
 function buildCanvas(img, quad, tw, th)
   local canvas = love.graphics.newCanvas(tw, th)
@@ -22,23 +23,11 @@ function buildCanvas(img, quad, tw, th)
 end
 
 function Player:_init(x,y,w,h)
-  Basic._init(self, {x=x,y=y,w=w,h=h}, {x=16*3,y=16*1,w=16,h=16}, CharacterSheet)
+  Basic._init(self, {x=x,y=y,w=w,h=h}, {x=GRID_SIZE*COL,y=GRID_SIZE*ROW,w=GRID_SIZE,h=GRID_SIZE}, CharacterSheet)
   self._speed = 100
   self._immobile = false
-  self.health = 4
-  self.hearts = {}
- 
-  local p = self
-  for i=1,self.health do
-    local heart = Pulse(Builders.buildHeart((16+i)*30,16, 32, 32), 16, 16)
-    heart = Damageable(heart, 100, function(d)
-      local h = d:getObj()
-      if not h:isOn() then
-        h:on()
-      end
-    end)
-    table.insert(self.hearts, heart)
-  end
+  self.health = 100
+
 end
 
 function Player:damage(amount)
@@ -55,9 +44,6 @@ end
 
 function Player:draw(game, room)
   Basic.draw(self, game)
-  for i, h in ipairs(self.hearts) do
-    h:draw(game, room)
-  end
 end
 
 function Player:update(game, dt, room)
@@ -71,10 +57,6 @@ function Player:update(game, dt, room)
 
   if not self._immobile then
     --self:updateInput(dt)
-  end
-
-  for i, h in ipairs(self.hearts) do
-    h:update(game, dt, room)
   end
 
 end

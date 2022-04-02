@@ -4,6 +4,7 @@ local Room = require('objects.room')
 local Player = require('objects.player')
 local Builders = require('objects.builders')
 local MainMenu = State:derive()
+local EventViewer = require('objects.eventviewer')
 
 local loop = love.audio.newSource("music/crappyloop.ogg", "stream")
 loop:setVolume(0.5)
@@ -31,6 +32,8 @@ function MainMenu:init(game)
   self:addKeyReleaseEvent('w', 'stopMovingUp')
   self:addKeyPressEvent('s', 'moveDown')
   self:addKeyReleaseEvent('s', 'stopMovingDown')
+
+  self:add(EventViewer())
 end
 
 function MainMenu:createLevel()
@@ -53,6 +56,10 @@ end
 function MainMenu:update(game, dt)
   State.update(self, game, dt)
   self.player:update(game, dt, self.room)
+  if self.player:doOnce('GameStarted') then
+    game:emit('event', 'Game Started')
+  end
+  self.room:update(game, dt)
 end
 
 function MainMenu:moveOnDown()

@@ -21,9 +21,59 @@ function Basic:_init(bounds, sprite, img, type)
   self.canCollide = function(o) return o._canCollide end
   self.markCollidable = function(o) o._canCollide = true end
   self.unmarkCollidable = function(o) o._canCollide = false end
+  self.behaviors = {}
+  self.offBehaviors = {}
+end
+
+function Basic:addBehavior(name, behavior)
+  self.behaviors[name] = behavior
+end
+
+function Basic:updateBehaviors(game, dt)
+  print('Should update behavior')
+  for name, behavior in ipairs(self.behaviors) do
+    print('Updating behavior')
+    behavior.update(game, dt, this)
+  end
+end
+
+function Basic:hasBehaviors(...)
+  local has = true
+  for _, name in pairs(...) do
+    has = has and not self.behavior[name]
+    if not has then
+      break -- early return
+    end
+  end
+  return has
+end
+
+function Basic:oneBehaviorOf(...)
+  for _, name in pairs(...) do
+    if self.behavior[name] then
+      return true
+    end
+  end
+  return false
+end
+
+function Basic:turnOffBehavior(name)
+  self.offBehaviors[name] = self.behaviors[name]
+  self.behaviors[name] = nil
+end
+
+function Basic:turnOnBehavior(name)
+  self.behaviors[name] = self.offBehaviors[name]
+  self.offBehaviors[name] = nil
 end
 
 function Basic:doCollision(hitObj, game, dt)
+end
+
+function Basic:update(game, dt)
+  GameObject.update(self, game, dt)
+  print('Updating behaviors')
+  self:updateBehaviors(game, dt)
 end
 
 function Basic:draw(game)

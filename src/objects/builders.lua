@@ -1,10 +1,11 @@
 local Basic = require('objects.basic')
 
-local img = require('ld48sheet')
+local img = require('main-sheet')
 
-function inSheet(type, img, col, row, size)
-    return function(x, y, w, h, onCollision)
-        local obj = Basic({x=x, y=y, w=w or size, h=h or size}, {x=size*col, y=size*row, w=size, h=size}, img, type)
+function inSheet(objType, img, col, row, size)
+    return function(x, y, w, h, onCollision, ObjectType)
+        ObjectType = ObjectType or Basic
+        local obj = ObjectType({x=x, y=y, w=w or size, h=h or size}, {x=size*col, y=size*row, w=size, h=size}, img, objType)
         function obj:doCollision(hitObj, game, dt)
             if onCollision then
                 onCollision(self, hitObj, game, dt)
@@ -22,9 +23,10 @@ function wrap(buildFn, wrapFn, args)
 end
 
 return {
-    buildStairs=inSheet("Stairs", img, 4, 0, 16),
-    buildHeart=inSheet("Heart", img, 5, 2, 16),
-    buildHeart2=inSheet("Heart2", img, 4, 2, 16),
-    buildHeartBroken=inSheet("HeartBroken", img, 6, 2, 16),
-    buildSpider=inSheet("Spider", img, 7, 1, 16),
+    buildObelisk=inSheet("Obelisk", img, 0, 0, GRID_SIZE),
+    buildEnemy1=inSheet("Enemy1", img, 0, 2, GRID_SIZE),
+    buildEnemy2=inSheet("Enemy2", img, 0, 3, GRID_SIZE),
+    buildEnemy3=inSheet("Enemy3", img, 0, 4, GRID_SIZE),
+    buildDemon=inSheet("Demon", img, 1, 1, 96),
+
 }
