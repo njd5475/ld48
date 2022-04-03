@@ -23,13 +23,15 @@ local Sequence = function(...)
       return failure
     elseif state.status == success and state.i >= #args then
       -- end of the sequence repeat
-      state.i=0
+      state.i=1
       return success
     elseif state.status == success and state.i < #args then
       state.i = state.i + 1
       local v = args[state.i]
       state.status = v(context, dt)
     end
+
+    return running
   end
 end
 

@@ -5,10 +5,12 @@ function love.conf(t)
 		loveVersion = '0.10.2',
 		version = '0.0.1',
 		author = 'Nick',
-		email = 'AnorStudios@gmail.com',
 		description = 'Try to slow the summoning of a demon by hordes of minions while unlocking personal power. To see if you can survive the monster that awaits you.',
-		homepage = 'https://anorstudios.itch.io/spitballs',
-		identifier = 'spitballs',
+		email = 'AddiekinStudio@gmail.com',
+		description = 'Multiplayer Action',
+		identifier = 'demons-call-inevitable-summoning',
+		homepage = 'https://addikinstudios.itch.io/demons-call-inevitable-summoning',
+		identifier = 'Inevitable Summoning',
 		excludeFileList = { ''} ,
 		compile = false,
 		projectDirectory = './',
@@ -16,10 +18,10 @@ function love.conf(t)
 	}
   t.title = "Demon\'s Call: Inevitable Summoning"
   t.window.fullscreen = false         -- Enable fullscreen (boolean)
-  t.window.fullscreentype = "desktop" -- Choose between "desktop" fullscreen or "exclusive" fullscreen mode (string)  
+  t.window.fullscreentype = "exclusive" -- Choose between "desktop" fullscreen or "exclusive" fullscreen mode (string)  
   t.window.width = 1024
   t.window.height = 768
-  t.window.highdpi = true
-  t.window.resizable = true
+  t.window.highdpi = false
+  t.window.resizable = false
   t.externalstorage = true
 end

@@ -1,5 +1,5 @@
 
-NAME = TheDemonName
+NAME = demons-call-inevitable-summoning
 DIST = dist
 SRC  = src
 VERSION = 0.0.1
