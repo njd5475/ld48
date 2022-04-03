@@ -1,6 +1,6 @@
 function love.conf(t)
 	t.releases = {
-		title = 'Demon\'s Call: Inevitable Summoning',
+		title = 'demons-call-inevitable-summoning',
 		package = 'demons-call-inevitable-summoning',
 		loveVersion = '0.10.2',
 		version = '0.0.1',
