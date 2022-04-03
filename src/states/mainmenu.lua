@@ -1,4 +1,5 @@
 
+local StartGame = require('objects.start_game')
 local MainMenu = State:derive()
 
 local function loadImg(file)
@@ -12,13 +13,13 @@ local background2 = loadImg('images/summon-02.png')
 local background3 = loadImg('images/summon-03.png')
 
 function MainMenu:draw(game)
-    State.draw(self, game)
     love.graphics.push()
     love.graphics.scale(1.15, 1.15)
     for _, bkg in pairs(self.backgrounds) do
         self:drawCentered(bkg)
     end
     love.graphics.pop()
+    State.draw(self, game)
 end
 
 function MainMenu:drawCentered(bkg)
@@ -52,6 +53,8 @@ function MainMenu:init(game)
         {img=background2, dur=5, size=5, base={dw=-1,dh=-1}, props=bkg2, tween=Tween.new(5, bkg2, {dw=0,dh=0}, Tween.easing.outSine)},
         {img=background3, dur=5, size=5, base={dw=-1,dh=-1}, props=bkg3, tween=Tween.new(5, bkg3, {dw=0,dh=0}, Tween.easing.inCubic)},
     }
+    local sw, sh = self:getDimensions()
+    self:add(StartGame(sw/2, sh/4, 300, 50))
 end
 
 function MainMenu:_init()

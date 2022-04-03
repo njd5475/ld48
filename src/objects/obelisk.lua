@@ -10,11 +10,15 @@ function Obelisk:_init(bounds, sprite, img)
     
     self.getMaxCharge = function(o) return o.maxCharge end
     self.getCharge = function(o) return o.charge end
-    self.isCharged = function(o) return o.charge == o.maxCharge end
+    self.isCharged = function(o) return o.charge >= o.maxCharge end
 end
 
 function Obelisk:update(game, dt)
     Basic.update(self, game, dt)
+
+    if math.ceil(self.charge) % 100 == 0 then
+        Emit('The summoning is progressing')
+    end
 end
 
 function Obelisk:draw(game)

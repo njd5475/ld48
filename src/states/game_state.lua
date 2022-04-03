@@ -3,7 +3,7 @@ require('common')
 local Room = require('objects.room')
 local Player = require('objects.player')
 local Builders = require('objects.builders')
-local MainMenu = State:derive()
+local GameState = State:derive()
 local EventViewer = require('objects.eventviewer')
 local BossSpawner = require('objects.boss_spawner')
 
@@ -11,17 +11,17 @@ local loop = love.audio.newSource("music/crappyloop.ogg", "stream")
 loop:setVolume(0.5)
 loop:setLooping(true)
 
-function MainMenu:_init()
-  State._init(self, 'MainMenu')
+function GameState:_init()
+  State._init(self, 'GameState')
 end
 
-function MainMenu:cleanup(game)
+function GameState:cleanup(game)
   State.cleanup(game)
 
   loop:stop()
 end
 
-function MainMenu:init(game)
+function GameState:init(game)
   loop:play()
   self:createLevel()
 
@@ -37,7 +37,7 @@ function MainMenu:init(game)
   self:add(EventViewer())
 end
 
-function MainMenu:createLevel()
+function GameState:createLevel()
   local room = Room()
   self:add(room)
   local px, py = room:getRandomEmptyTile()
@@ -55,11 +55,11 @@ function MainMenu:createLevel()
   self.room = room
 end
 
-function MainMenu:jump(key, game)
+function GameState:jump(key, game)
   print("Main Menu State received a jump action")
 end
 
-function MainMenu:update(game, dt)
+function GameState:update(game, dt)
   State.update(self, game, dt)
   if self.player:doOnce('GameStarted') then
     game:emit('event', 'Game Started')
@@ -67,13 +67,13 @@ function MainMenu:update(game, dt)
   self.room:update(game, dt)
 end
 
-function MainMenu:moveOnDown()
+function GameState:moveOnDown()
   self:removeAll()
   self.level = (self.level or 1) + 1
   self:createLevel()
 end
 
-function MainMenu:draw(game)
+function GameState:draw(game)
   love.graphics.clear(1/255, 0/255, 3/255, 0)
   State.draw(self, game)
   SetColor('depthCount')
@@ -81,36 +81,36 @@ function MainMenu:draw(game)
 end
 
 
-function MainMenu:moveLeft(key, game, dt)
+function GameState:moveLeft(key, game, dt)
   self.player:moveLeft(game, dt, self.room)
 end
 
-function MainMenu:stopMovingLeft(key, game, dt)
+function GameState:stopMovingLeft(key, game, dt)
   self.player:stopMovingLeft(game, dt, self.room)
 end
   
-function MainMenu:moveRight(key, game, dt)
+function GameState:moveRight(key, game, dt)
   self.player:moveRight(game, dt, self.room)
 end
 
-function MainMenu:stopMovingRight(key, game, dt)
+function GameState:stopMovingRight(key, game, dt)
   self.player:stopMovingRight(game, dt, self.room)
 end
 
-function MainMenu:moveUp(key, game, dt)
+function GameState:moveUp(key, game, dt)
   self.player:moveUp(game, dt, self.room)
 end
 
-function MainMenu:stopMovingUp(key, game, dt)
+function GameState:stopMovingUp(key, game, dt)
   self.player:stopMovingUp(game, dt, self.room)
 end
 
-function MainMenu:moveDown(key, game, dt)
+function GameState:moveDown(key, game, dt)
   self.player:moveDown(game, dt, self.room)
 end
 
-function MainMenu:stopMovingDown(key, game, dt)
+function GameState:stopMovingDown(key, game, dt)
   self.player:stopMovingDown(game, dt, self.room)
 end
 
-return MainMenu
+return GameState

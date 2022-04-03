@@ -10,19 +10,20 @@ end
 function BossSpawner:update(game, dt)
     GameObject.update(self, game, dt)
 
-    if self:doOnce('spawnBoss') then
-        local shouldSpawn = true
-        for _, o in ipairs(self.obelisks) do
-            shouldSpawn = shouldSpawn and o:isCharged()
-        end
+    local shouldSpawn = true
+    for _, o in ipairs(self.obelisks) do
+        shouldSpawn = shouldSpawn and o:isCharged()
+    end
 
-        if shouldSpawn then
+    if shouldSpawn then
+        if self:doOnce('spawnBoss') then
             local room = game:current():getObjectsOfType('Room')
             if #room > 0 then
                 room = room[1]
                 local boss = room:placeBoss()
                 Emit('Summoning Complete HE IS HERE!')
                 game:current():add(boss)
+                game:current():add()
             else
                 print('I could not find a room to spawn boss in')
             end

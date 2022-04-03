@@ -71,7 +71,7 @@ function State:getObjectsOfType(...)
   local results = {}
   local args = {...}
   for _, t in pairs(args) do 
-    local objList = self.types[t]
+    local objList = self.types[t] or {}
     for _, o in pairs(objList) do
       table.insert(results, o)
     end

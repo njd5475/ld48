@@ -1,5 +1,5 @@
 
-NAME = DeeperDungeon
+NAME = InevitableSummoning
 DIST = dist
 SRC  = src
 VERSION = 0.0.1

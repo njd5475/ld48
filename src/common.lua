@@ -7,8 +7,6 @@ LogoFont = love.graphics.newFont("fonts/press-start-2p/PressStart2P-Regular.ttf"
 LogoMidFont = love.graphics.newFont("fonts/press-start-2p/PressStart2P-Regular.ttf", 18)
 LogoRegularFont = love.graphics.newFont("fonts/press-start-2p/PressStart2P-Regular.ttf", 10)
 
-TheSheet = require('thesheet')
-
 -- Color pallette from https://lospec.com/palette-list/dustbyte
 BaseColors = {
   black={r=55, g=42, b=57},
@@ -25,7 +23,9 @@ Colors={
   eventForeground=BaseColors.yellow,
   eventBackground=BaseColors.redbrown,
   playerHealthForeground=BaseColors.yellow,
-  playerHealthBackground=BaseColors.green
+  playerHealthBackground=BaseColors.green,
+  buttonBackground=BaseColors.green,
+  buttonForeground=BaseColors.redbrown,
 }
 
 function SetColor(colorName)
