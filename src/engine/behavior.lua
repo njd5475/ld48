@@ -1,3 +1,4 @@
+-- MIT License
 
 local success, failure, running = 'Success', 'Failure', 'Running'
 
