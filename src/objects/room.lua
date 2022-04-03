@@ -231,9 +231,8 @@ end
 function Room:update(game, dt)
   GameObject.update(game, dt)
 
-  for k, i in ipairs(self.items) do
-    i.item:update(game, dt)
-    print('Updating item ' .. i.item:name())
+  for k, i in pairs(self.items) do
+    i.item:update(game, dt, self)
   end
 end
 

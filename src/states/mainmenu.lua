@@ -55,7 +55,6 @@ end
 
 function MainMenu:update(game, dt)
   State.update(self, game, dt)
-  self.player:update(game, dt, self.room)
   if self.player:doOnce('GameStarted') then
     game:emit('event', 'Game Started')
   end

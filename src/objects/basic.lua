@@ -30,10 +30,14 @@ function Basic:addBehavior(name, behavior)
 end
 
 function Basic:updateBehaviors(game, dt)
-  print('Should update behavior')
-  for name, behavior in ipairs(self.behaviors) do
-    print('Updating behavior')
-    behavior.update(game, dt, this)
+
+  for name, behavior in pairs(self.behaviors) do
+    if type(behavior) == 'function' then
+      behavior(game, dt, self)
+    elseif type(behavior) == 'table' then
+      local fn = behavior.update or behavior
+      fn(game, dt, self)
+    end
   end
 end
 
@@ -72,7 +76,6 @@ end
 
 function Basic:update(game, dt)
   GameObject.update(self, game, dt)
-  print('Updating behaviors')
   self:updateBehaviors(game, dt)
 end
 

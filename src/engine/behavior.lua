@@ -22,6 +22,8 @@ local Sequence = function(...)
     elseif state.status == failure then
       return failure
     elseif state.status == success and state.i >= #args then
+      -- end of the sequence repeat
+      state.i=0
       return success
     elseif state.status == success and state.i < #args then
       state.i = state.i + 1
@@ -32,12 +34,13 @@ local Sequence = function(...)
 end
 
 local Delay = function(delay, child)
+  local state = delay
   return function (context, dt)
-    print('Being delayed')
-    if delay <= 0 then
+    if state <= 0 then
+      state = delay
       return child(context, dt)
     end
-    delay = delay - dt
+    state = math.max(0, state - dt)
     return running
   end
 end
@@ -52,7 +55,24 @@ local Inverter = function(child)
         return success
       end
     end
-    return state
+
+    -- should be running so return children for replay
+    return state, child 
+  end
+end
+
+local Repeater = function(times, child)
+  times = math.max(1, times)
+  local left = times
+  return function(context, dt)
+    if left <= 0 then
+      left = math.max(0, left - 1)
+      child(context, dt) -- ignore child statuses
+      return success
+    else
+      left = times -- reset
+      return failure
+    end
   end
 end
 
@@ -62,6 +82,7 @@ return {
   running=running,
   Selector=Selector,
   Sequence=Sequence,
+  Repeater=Repeater,
   Delay=Delay,
   Inverter=Inverter,
 }
