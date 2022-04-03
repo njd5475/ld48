@@ -1,5 +1,4 @@
 -- MIT License
-
 local success, failure, running = 'Success', 'Failure', 'Running'
 
 local Selector = function(selectors)
