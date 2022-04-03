@@ -1,116 +1,61 @@
-require('common')
 
-local Room = require('objects.room')
-local Player = require('objects.player')
-local Builders = require('objects.builders')
 local MainMenu = State:derive()
-local EventViewer = require('objects.eventviewer')
-local BossSpawner = require('objects.boss_spawner')
 
-local loop = love.audio.newSource("music/crappyloop.ogg", "stream")
-loop:setVolume(0.5)
-loop:setLooping(true)
-
-function MainMenu:_init()
-  State._init(self, 'MainMenu')
+local function loadImg(file)
+    local img = love.graphics.newImage(file)
+    img:setFilter('nearest', 'nearest')
+    return img
 end
 
-function MainMenu:cleanup(game)
-  State.cleanup(game)
+local background1 = loadImg('images/summon-01.png')
+local background2 = loadImg('images/summon-02.png')
+local background3 = loadImg('images/summon-03.png')
 
-  loop:stop()
+function MainMenu:draw(game)
+    State.draw(self, game)
+    love.graphics.push()
+    love.graphics.scale(1.15, 1.15)
+    for _, bkg in pairs(self.backgrounds) do
+        self:drawCentered(bkg)
+    end
+    love.graphics.pop()
 end
 
-function MainMenu:init(game)
-  loop:play()
-  self:createLevel()
-
-  self:addKeyPressEvent('a', 'moveLeft')
-  self:addKeyReleaseEvent('a', 'stopMovingLeft')
-  self:addKeyPressEvent('d', 'moveRight')
-  self:addKeyReleaseEvent('d', 'stopMovingRight')
-  self:addKeyPressEvent('w', 'moveUp')
-  self:addKeyReleaseEvent('w', 'stopMovingUp')
-  self:addKeyPressEvent('s', 'moveDown')
-  self:addKeyReleaseEvent('s', 'stopMovingDown')
-
-  self:add(EventViewer())
+function MainMenu:drawCentered(bkg)
+    local w, h = self:getDimensions()
+    local img = bkg.img
+    local s = bkg.size
+    local varX, varY = s*bkg.props.dw, s*bkg.props.dh
+    love.graphics.draw(img, varX, varY, 0, ((w+varX*2)/img:getWidth()) , ((h+varY*2)/img:getHeight()))
 end
 
-function MainMenu:createLevel()
-  local room = Room()
-  self:add(room)
-  local px, py = room:getRandomEmptyTile()
-  if(px < 0 or py < 0) then
-    print('Could not find a place for the player')
-  end
-  self.player = Player(px*room:getTileWidth(), py*room:getTileHeight(),64,64)
-  self.player:setInput('keyboard')
-  --room:addItem(self.player, px, py)
-  self:add(self.player)
-  local spawner = BossSpawner()
-  local o = spawner:getNewObelisk(room)
-  self:add(o)
-  self:add(spawner)
-  self.room = room
-end
-
-function MainMenu:jump(key, game)
-  print("Main Menu State received a jump action")
+function MainMenu:getDimensions()
+    return love.graphics:getWidth(), love.graphics:getHeight()
 end
 
 function MainMenu:update(game, dt)
-  State.update(self, game, dt)
-  if self.player:doOnce('GameStarted') then
-    game:emit('event', 'Game Started')
-  end
-  self.room:update(game, dt)
+    State.update(self, game, dt)
+    for _, bkg in pairs(self.backgrounds) do
+        if bkg.tween:update(dt) then
+            local newBase = bkg.tween.target
+            bkg.tween = Tween.new(love.math.random(bkg.dur), bkg.props, bkg.base, bkg.tween.easing)
+            bkg.base = newBase
+        end
+    end
 end
 
-function MainMenu:moveOnDown()
-  self:removeAll()
-  self.level = (self.level or 1) + 1
-  self:createLevel()
+function MainMenu:init(game)
+
+    local bkg1, bkg2, bkg3 = {dw=-1,dh=-1}, {dw=-1,dh=-1}, {dw=-1,dh=-1}
+    self.backgrounds = {
+        {img=background1, dur=5, size=5, base={dw=-1,dh=-1}, props=bkg1, tween=Tween.new(5, bkg1, {dw=0,dh=0}, Tween.easing.inSine)},
+        {img=background2, dur=5, size=5, base={dw=-1,dh=-1}, props=bkg2, tween=Tween.new(5, bkg2, {dw=0,dh=0}, Tween.easing.outSine)},
+        {img=background3, dur=5, size=5, base={dw=-1,dh=-1}, props=bkg3, tween=Tween.new(5, bkg3, {dw=0,dh=0}, Tween.easing.inCubic)},
+    }
 end
 
-function MainMenu:draw(game)
-  love.graphics.clear(1/255, 0/255, 3/255, 0)
-  State.draw(self, game)
-  SetColor('depthCount')
-  love.graphics.setFont(LogoMidFont)
-end
-
-
-function MainMenu:moveLeft(key, game, dt)
-  self.player:moveLeft(game, dt, self.room)
-end
-
-function MainMenu:stopMovingLeft(key, game, dt)
-  self.player:stopMovingLeft(game, dt, self.room)
-end
-  
-function MainMenu:moveRight(key, game, dt)
-  self.player:moveRight(game, dt, self.room)
-end
-
-function MainMenu:stopMovingRight(key, game, dt)
-  self.player:stopMovingRight(game, dt, self.room)
-end
-
-function MainMenu:moveUp(key, game, dt)
-  self.player:moveUp(game, dt, self.room)
-end
-
-function MainMenu:stopMovingUp(key, game, dt)
-  self.player:stopMovingUp(game, dt, self.room)
-end
-
-function MainMenu:moveDown(key, game, dt)
-  self.player:moveDown(game, dt, self.room)
-end
-
-function MainMenu:stopMovingDown(key, game, dt)
-  self.player:stopMovingDown(game, dt, self.room)
+function MainMenu:_init()
+    State._init(self, 'MainMenu')
 end
 
 return MainMenu

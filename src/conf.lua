@@ -5,10 +5,10 @@ function love.conf(t)
 		loveVersion = '0.10.2',
 		version = '0.0.1',
 		author = 'Nick',
-		email = 'AnorStudios@gmail.com',
+		email = 'AddiekinStudio@gmail.com',
 		description = 'Multiplayer Action',
-		homepage = 'https://anorstudios.itch.io/spitballs',
-		identifier = 'spitballs',
+		homepage = 'https://addikinstudios.itch.io/spitballs',
+		identifier = 'Inevitable Summoning',
 		excludeFileList = { ''} ,
 		compile = false,
 		projectDirectory = './',
@@ -16,10 +16,10 @@ function love.conf(t)
 	}
   t.title = "Deeper Dungeon"
   t.window.fullscreen = false         -- Enable fullscreen (boolean)
-  t.window.fullscreentype = "desktop" -- Choose between "desktop" fullscreen or "exclusive" fullscreen mode (string)  
+  t.window.fullscreentype = "exclusive" -- Choose between "desktop" fullscreen or "exclusive" fullscreen mode (string)  
   t.window.width = 1024
   t.window.height = 768
-  t.window.highdpi = true
-  t.window.resizable = true
+  t.window.highdpi = false
+  t.window.resizable = false
   t.externalstorage = true
 end

@@ -12,7 +12,6 @@ function Enemy:_init(bounds, sprite, img)
     self:addBehavior('testdelay',
         Behaviors.Sequence(
             Behaviors.Delay(2, function(ctx, dt)
-                print('I have been delayed 1')
                 return Behaviors.success
             end),
             function(ctx, dt)
@@ -22,12 +21,11 @@ function Enemy:_init(bounds, sprite, img)
                     Emit('Enemy ' .. self:id() .. ' deals you ' .. self.damage .. ' damage')
                     results[1]:damage(self.damage)
                 else
-                    print('Could not find player')
+                    --print('Could not find player')
                 end
                 return Behaviors.success
             end,
             Behaviors.Delay(2, function(ctx, dt)
-                print('I have been delayed 2')
                 return Behaviors.success
             end)
         )
