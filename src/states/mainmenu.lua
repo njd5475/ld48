@@ -5,6 +5,7 @@ local Player = require('objects.player')
 local Builders = require('objects.builders')
 local MainMenu = State:derive()
 local EventViewer = require('objects.eventviewer')
+local BossSpawner = require('objects.boss_spawner')
 
 local loop = love.audio.newSource("music/crappyloop.ogg", "stream")
 loop:setVolume(0.5)
@@ -45,7 +46,12 @@ function MainMenu:createLevel()
   end
   self.player = Player(px*room:getTileWidth(), py*room:getTileHeight(),64,64)
   self.player:setInput('keyboard')
-  room:addItem(self.player, px, py)
+  --room:addItem(self.player, px, py)
+  self:add(self.player)
+  local spawner = BossSpawner()
+  local o = spawner:getNewObelisk(room)
+  self:add(o)
+  self:add(spawner)
   self.room = room
 end
 
@@ -72,12 +78,8 @@ function MainMenu:draw(game)
   State.draw(self, game)
   SetColor('depthCount')
   love.graphics.setFont(LogoMidFont)
-  love.graphics.print(self:getLevel(), 10, 10)
 end
 
-function MainMenu:getLevel()
-  return 'Floor ' .. (self.level or 1)
-end
 
 function MainMenu:moveLeft(key, game, dt)
   self.player:moveLeft(game, dt, self.room)

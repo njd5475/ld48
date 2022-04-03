@@ -75,6 +75,10 @@ function Game:bind(key, method, action)
   end
 end
 
+function Game:getObjectsOfType(...)
+  return self:current():getObjectsOfType(...)
+end
+
 function Game:triggerAction(action)
   if self:current()[action] then
     self:current()[action](self:current(), self)

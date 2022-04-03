@@ -21,8 +21,11 @@ Colors={
   background=BaseColors.black,
   depthCount=BaseColors.redbrown,
   debugLine=BaseColors.yellow,
+  debugOrigins=BaseColors.yellow,
   eventForeground=BaseColors.yellow,
   eventBackground=BaseColors.redbrown,
+  playerHealthForeground=BaseColors.yellow,
+  playerHealthBackground=BaseColors.green
 }
 
 function SetColor(colorName)

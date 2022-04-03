@@ -3,7 +3,8 @@ local Basic = require('objects.basic')
 local Builders = require('objects.builders')
 local Pulse = require('effects.pulse')
 local Damageable = require('effects.damageable')
-local Player = Basic:derive("player")
+local Player = Basic:derive("Player")
+local PlayerHud = require('objects.player_hud')
 
 local CharacterSheet = require('main-sheet')
 local COL, ROW = 0, 1
@@ -26,20 +27,18 @@ function Player:_init(x,y,w,h)
   Basic._init(self, {x=x,y=y,w=w,h=h}, {x=GRID_SIZE*COL,y=GRID_SIZE*ROW,w=GRID_SIZE,h=GRID_SIZE}, CharacterSheet)
   self._speed = 100
   self._immobile = false
-  self.health = 100
-
+  self.maxHealth = 100
+  self.health = self.maxHealth
 end
 
 function Player:damage(amount)
-  if #self.hearts then
-    local h = self.hearts[1]
-
-    h:damage(amount)
-    if h:dead() then
-      print("Remove a heart :(")
-      table.remove(self.hearts, 1)
-    end
+  if self.health > 0 then
+    self.health = self.health - amount
   end
+end
+
+function Player:dead()
+  return self.health <= 0
 end
 
 function Player:draw(game, room)
@@ -47,6 +46,10 @@ function Player:draw(game, room)
 end
 
 function Player:update(game, dt, room)
+
+  if self:doOnce('addHud') then
+    game:current():add(PlayerHud(self))
+  end
 
   if self.isMoving and not self._immobile then
     self.x, self.y = Vec(self.x, self.y):add(self:getDirection():mult(dt*self:speed())):unwrap()
@@ -148,23 +151,31 @@ function Player:move(dir, dt, room)
   player.x, player.y = Vec(player.x, player.y):add(dir:mult(dt):mult(player:speed())):unwrap()
 end
 
+function Player:getHealth()
+  return self.health
+end
+
+function Player:getMaxHealth()
+  return self.maxHealth
+end
+
 function Player:revert()
   self.x, self.y = self.lastX, self.lastY
 end
 
 function Player:checkMoveRevert(game, dt, room)
-  local isBlocked, byItems = room:isBlocked(self)
-  if byItems then
-    -- check here for collisions
+  -- local isBlocked, byItems = room:isBlocked(self)
+  -- if byItems then
+  --   -- check here for collisions
 
-    if byItems and #byItems > 0 then
-      for key, item in ipairs(byItems) do
-        if item.canCollide and item:canCollide() then
-          item:doCollision(self, game, dt)
-        end
-      end
-    end
-  end
+  --   if byItems and #byItems > 0 then
+  --     for key, item in ipairs(byItems) do
+  --       if item.canCollide and item:canCollide() then
+  --         item:doCollision(self, game, dt)
+  --       end
+  --     end
+  --   end
+  -- end
 
   if isBlocked then
     self:revert()

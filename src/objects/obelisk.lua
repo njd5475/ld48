@@ -1,14 +1,29 @@
 
+local Basic = require('objects.basic')
 local Obelisk = Basic:derive('Obelisk')
 
 
-function Obelisk:_init(x, y, sprite, img)
-    Basic._init(self, {x=x, y=y, w=32, h=64}, sprite, img, 'Obelisk')
+function Obelisk:_init(bounds, sprite, img)
+    Basic._init(self, bounds, sprite, img, 'Obelisk')
+    self.maxCharge = 1000
+    self.charge = 0
+    
+    self.getMaxCharge = function(o) return o.maxCharge end
+    self.getCharge = function(o) return o.charge end
+    self.isCharged = function(o) return o.charge == o.maxCharge end
+end
+
+function Obelisk:update(game, dt)
+    Basic.update(self, game, dt)
 end
 
 function Obelisk:draw(game)
-    Basic.draw(game)
+    Basic.draw(self, game)
     self.others = {}
+end
+
+function Obelisk:transfer(charge)
+    self.charge = math.min(self.maxCharge, self.charge + charge)
 end
 
 function Obelisk:summons(demon)
@@ -26,7 +41,5 @@ function Obelisk:theOthers()
     return self.others
 end
 
-function Obelisk:update(game, dt)
-end
 
 return Obelisk

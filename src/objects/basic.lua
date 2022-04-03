@@ -14,6 +14,8 @@ function Basic:_init(bounds, sprite, img, type)
   self.w, self.h = bounds.w, bounds.h
   self.scaleX, self.scaleY = self.w/sprite.w, self.h/sprite.h
   self._canCollide = false
+  self.getX = function(o) return o.x end
+  self.getY = function(o) return o.y end
   self.boundsX = function(o) return o.x end
   self.boundsY = function(o) return o.y end
   self.boundsWidth = function(o) return o.w end

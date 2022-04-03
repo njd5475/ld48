@@ -41,11 +41,12 @@ function State:update(game, dt)
   self:handleInputActions(game, dt)
 end
 
-function State:withinRange(x, y, rangeSq, type)
+function State:withinRange(x, y, rangeSq, objType)
+  assert(type(rangeSq) == 'number', 'Range must be a number')
   local results = {}
   local objs = self.objects
-  if type then
-    objs = self.types[type]
+  if objType then
+    objs = self.types[objType]
   end
 
   if objs then
@@ -55,6 +56,24 @@ function State:withinRange(x, y, rangeSq, type)
       if (rangeSq+o:boundsRadiiSq()) >= dsq then
         table.insert(results, o)
       end
+    end
+  else
+    print('No objects found of type ' .. objType)
+    for t in pairs(self.types) do
+      print('Have ' .. t)
+    end
+  end
+
+  return results
+end
+
+function State:getObjectsOfType(...)
+  local results = {}
+  local args = {...}
+  for _, t in pairs(args) do 
+    local objList = self.types[t]
+    for _, o in pairs(objList) do
+      table.insert(results, o)
     end
   end
 
@@ -76,6 +95,7 @@ end
 function State:getNumberOfObjects()
   return self.size
 end
+
 
 function State:add(o)
   if o.dead and o.id and not o:dead() then
