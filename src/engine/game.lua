@@ -3,10 +3,13 @@ local Game = require("engine.class")()
 
 require('engine.utils')
 
+local Events = require('engine.lib.events')
+
 function Game:_init(startState)
   assert(startState, "Cannot start a game with a nil state!")
   self.states = {}
   self.bindings = {}
+  self.events = Events()
   local me = self
   love.draw = function() me:draw() end
   love.update = function(dt) me:update(dt) end
@@ -72,6 +75,10 @@ function Game:bind(key, method, action)
   end
 end
 
+function Game:getObjectsOfType(...)
+  return self:current():getObjectsOfType(...)
+end
+
 function Game:triggerAction(action)
   if self:current()[action] then
     self:current()[action](self:current(), self)
@@ -115,6 +122,21 @@ end
 
 function Game:outside(go)
   return not collides(self.bounds, go:bounds())
+end
+
+function Game:on(event, fn)
+  local game = self
+  self.events:on(event, function(...)
+    fn(game, ...)
+  end)
+end
+
+function Game:off(event)
+  self.events:off(event)
+end
+
+function Game:emit(event, ...)
+  self.events:emit(event, ...)
 end
 
 return Game

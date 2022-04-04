@@ -4,19 +4,93 @@ local Room = GameObject:derive('Room')
 local Builders = require('objects.builders')
 local Wall = require('objects.wall')
 local Items = require('items')
+local Enemy = require('objects.enemy')
+local Obelisk = require('objects.obelisk')
+
+local printAttack = function(item, player, game, dt)
+  print('Attack the player')
+end
 
 function Room:_init(x,y,w,h)
   GameObject._init(self)
   self.items = {}
-  self.props = {w=10, h=10, tileW=64, tileH=64}
+  self.props = {w=15, h=11, tileW=64, tileH=64}
   self:buildFrame()
-  self:placeStairs()
-  local spider, j, i = self:placeItemRandomly(Builders.buildSpider, 
-  function(spider, player, game, dt)
-    spider:attack(player, dt)
-  end)
-  spider = Attackable(Damageable(spider), Items.SpiderSting, 10)
-  self:addItem(spider, j, i)
+
+  self:placeEnemy1()
+  self:placeEnemy2()
+  self:placeEnemy3()
+end
+
+function Room:placeBoss()
+  item, j, i = self:placeItemRandomlySized(Builders.buildDemon, printAttack, {w=96, h=96})
+  self:addItem(item, j, i)
+  return item
+end
+
+function Room:placeEnemy1()
+  local item, j, i = self:placeItemRandomlyTyped(Builders.buildEnemy1, function() end, Enemy)
+  self:addItem(item, j, i)
+  return item
+end
+
+function Room:placeEnemy2()
+  local item, j, i = self:placeItemRandomlyTyped(Builders.buildEnemy2, function() end, Enemy)
+  self:addItem(item, j, i)
+  return item
+end
+
+function Room:placeEnemy3()
+  local item, j, i = self:placeItemRandomlyTyped(Builders.buildEnemy3, function() end, Enemy)
+  self:addItem(item, j, i)
+  return item
+end
+
+function Room:placeObelisk()
+  local collide = function(stair, hitObj, game) end
+  local item, j, i = self:placeItemRandomlyTyped(Builders.buildObelisk, collide, Obelisk)
+  self:addItem(item, j, i)
+  return item
+end
+
+function Room:placeItemRandomly(buildFn, collide)
+  local tileW, tileH = self:getTileWidth(), self:getTileHeight()
+  return self:placeItemRandomlySized(buildFn, collide, {w=tileW, h=tileH})
+end
+
+function Room:placeItemRandomlyTyped(buildFn, collide, ObjType)
+  local tileW, tileH = self:getTileWidth(), self:getTileHeight()
+  return self:placeItemRandomlySized(buildFn, collide, {w=tileW, h=tileH}, ObjType)
+end
+
+function Room:placeItemRandomlySized(buildFn, collide, bounds, ObjType)
+  local tileW, tileH = self:getTileWidth(), self:getTileHeight()
+  local sizeW, sizeH = bounds.w, bounds.h
+  local j, i = 0, 0
+  local added = false
+  local item = nil
+  repeat 
+    j, i = self:getRandomTile() 
+    local there = self:getItems(j, i)
+    if not there then
+      item = buildFn(j*tileW, i*tileH, sizeW, sizeH, collide, ObjType)
+      if collide then
+        item:markCollidable()
+      end
+      print("Adding " .. item:type())
+      added = true
+      return item, j, i
+    end
+  until added
+end
+
+function Room:addItem(item, j, i)
+  assert(not self:getItems(j, i))
+  self.items[self:getIndex(j,i)] = {
+    item=item,
+    x=j,
+    y=i
+  }
 end
 
 function Room:getWidth()
@@ -105,45 +179,6 @@ function Room:getItemsForObject(object)
   return items
 end
 
-function Room:addItem(item, j, i)
-  assert(not self:getItems(j, i))
-  self.items[self:getIndex(j,i)] = {
-    item=item,
-    x=j,
-    y=i
-  }
-end
-
-function Room:placeStairs()
-  local collide = function(stair, hitObj, game)
-    if hitObj:is('player') then
-      game:current():moveOnDown()
-    end
-  end
-  local item, j, i = self:placeItemRandomly(Builders.buildStairs, collide)
-  self:addItem(item, j, i)
-end
-
-function Room:placeItemRandomly(buildFn, collide)
-  local tileW, tileH = self:getTileWidth(), self:getTileHeight()
-  local j, i = 0, 0
-  local added = false
-  local item = nil
-  repeat 
-    j, i = self:getRandomTile() 
-    local there = self:getItems(j, i)
-    if not there then
-      item = buildFn(j*tileW, i*tileH, tileW, tileH, collide)
-      if collide then
-        item:markCollidable()
-      end
-      print("Adding " .. item:type())
-      added = true
-      return item, j, i
-    end
-  until added
-end
-
 function Room:getRandomTile()
   return math.floor(love.math.random() * (self:getWidth()-1) + 1), math.floor(love.math.random() * (self:getHeight()-1) + 1)
 end
@@ -197,8 +232,8 @@ end
 function Room:update(game, dt)
   GameObject.update(game, dt)
 
-  for k, i in ipairs(self.items) do
-    i.item:update(game, dt)
+  for k, i in pairs(self.items) do
+    i.item:update(game, dt, self)
   end
 end
 

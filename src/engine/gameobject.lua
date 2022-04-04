@@ -26,6 +26,13 @@ GameObject.boundsHeight = function(o) return 0 end
 GameObject.boundsCenter = function(o)
   return o:boundsX() + o:boundsWidth() / 2, o:boundsY() + o:boundsHeight()/2
 end
+GameObject.doOnce = function(o, name)
+  if not o['once_' .. name] then
+    o['once_' .. name] = true
+    return true
+  end
+  return false
+end
 GameObject.adjustToPlatform = function(o, p) end
 GameObject.feet = function(o) return {{x=o.x, y=o.y}} end
 GameObject.boundsRadiiSq = function(o)

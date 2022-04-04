@@ -1,11 +1,11 @@
 require('engine.common')
 
+GRID_SIZE = 32
+
 joyInputs = {"x","y",'a','b','back','start','leftstick','rightstick','leftshoulder','rightshoulder','dpup','dpdown','dpleft','dpright'}
 LogoFont = love.graphics.newFont("fonts/press-start-2p/PressStart2P-Regular.ttf", 56)
 LogoMidFont = love.graphics.newFont("fonts/press-start-2p/PressStart2P-Regular.ttf", 18)
 LogoRegularFont = love.graphics.newFont("fonts/press-start-2p/PressStart2P-Regular.ttf", 10)
-
-TheSheet = require('thesheet')
 
 -- Color pallette from https://lospec.com/palette-list/dustbyte
 BaseColors = {
@@ -19,6 +19,13 @@ Colors={
   background=BaseColors.black,
   depthCount=BaseColors.redbrown,
   debugLine=BaseColors.yellow,
+  debugOrigins=BaseColors.yellow,
+  eventForeground=BaseColors.yellow,
+  eventBackground=BaseColors.redbrown,
+  playerHealthForeground=BaseColors.yellow,
+  playerHealthBackground=BaseColors.green,
+  buttonBackground=BaseColors.green,
+  buttonForeground=BaseColors.redbrown,
 }
 
 function SetColor(colorName)
@@ -35,3 +42,5 @@ end
 Damageable = require('effects.damageable')
 Attackable = require('effects.attackable')
 Pulse = require('effects.pulse')
+
+require('names')
