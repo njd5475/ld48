@@ -51,6 +51,9 @@ function GameState:createLevel()
   local spawner = BossSpawner()
   local o = spawner:getNewObelisk(room)
   self:add(o)
+  -- o = spawner:getNewObelisk(room)
+  -- self:add(o)
+    
   self:add(spawner)
   self.room = room
 end

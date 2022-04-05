@@ -17,6 +17,7 @@ function State:cleanup(game)
 end
 
 function State:draw(game)
+  SetColor('Background')
   for _, go in pairs(self.objects) do
     go:draw(game)
   end

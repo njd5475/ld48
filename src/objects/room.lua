@@ -6,6 +6,7 @@ local Wall = require('objects.wall')
 local Items = require('items')
 local Enemy = require('objects.enemy')
 local Obelisk = require('objects.obelisk')
+local Boss = require('objects.boss')
 
 local printAttack = function(item, player, game, dt)
   print('Attack the player')
@@ -23,7 +24,7 @@ function Room:_init(x,y,w,h)
 end
 
 function Room:placeBoss()
-  item, j, i = self:placeItemRandomlySized(Builders.buildDemon, printAttack, {w=96, h=96})
+  item, j, i = self:placeItemRandomlySized(Builders.buildDemon, printAttack, {w=96, h=96}, Boss)
   self:addItem(item, j, i)
   return item
 end
