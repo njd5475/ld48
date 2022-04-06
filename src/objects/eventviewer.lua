@@ -15,7 +15,7 @@ function EventViewer:update(game, dt)
         local msg = self:dequeue()
         if msg then
             local len = love.graphics.getFont():getWidth(msg)
-            self.last = EventDisplay(0.5, love.graphics:getWidth()/2-len/2, love.graphics:getHeight()-20, msg)
+            self.last = EventDisplay(2, love.graphics:getWidth()/2-len/2, love.graphics:getHeight()-20, msg)
             game:current():add(self.last)
         end
     end

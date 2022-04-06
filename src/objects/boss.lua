@@ -40,7 +40,7 @@ function Boss:_init(bounds, sprite, img)
                 ),
                 Behaviors.Delay(1),
                 Common.emit('Muuuaaahhhhh My minions destroyed you! :)'),
-                Behaviors.Delay(10),
+                Behaviors.Delay(20),
                 function(ctx, dt)
                     if not me.hasPlayer then
                         ctx:changeState('MainMenu')
