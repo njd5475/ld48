@@ -17,18 +17,22 @@ local Sequence = function(...)
   local state = { status=running, i=1 }
   return function(context, dt)
     if state.status == running then
-      local v = args[state.i]
+      local v = args[state.i] -- run current
       state = {status=v(context, dt), i=state.i}
+      -- return running
+    elseif state.status == success and state.i < #args then
+      state.i = state.i + 1 -- next
+      local v = args[state.i]
+      state.status = running
+      -- return running
     elseif state.status == failure then
+      state.i=1 -- end of the sequence repeat
+      state.status = running
       return failure
     elseif state.status == success and state.i >= #args then
-      -- end of the sequence repeat
-      state.i=1
+      state.i=1 -- end of the sequence repeat
+      state.status=running
       return success
-    elseif state.status == success and state.i < #args then
-      state.i = state.i + 1
-      local v = args[state.i]
-      state.status = v(context, dt)
     end
 
     return running
@@ -40,7 +44,10 @@ local Delay = function(delay, child)
   return function (context, dt)
     if state <= 0 then
       state = delay
-      return child(context, dt)
+      if child then
+        return child(context, dt)
+      end
+      return success
     end
     state = math.max(0, state - dt)
     return running
@@ -50,7 +57,7 @@ end
 local Inverter = function(child)
   return function(context, dt)
     local state = child(context, dt)
-    if state ~= running then
+    if not(state == running) then
       if state == success then
         return failure
       else

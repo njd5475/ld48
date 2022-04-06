@@ -33,7 +33,7 @@ end
 
 function Player:damage(amount)
   if self.health > 0 then
-    self.health = self.health - amount
+    self.health = math.max(0, self.health - amount)
   end
 end
 

@@ -1,8 +1,8 @@
 
 local EventDisplay = Expiring:derive('EventDisplay')
 
-function EventDisplay:_init(x,y,message)
-    Expiring._init(self, 2)
+function EventDisplay:_init(duration, x,y,message)
+    Expiring._init(self, duration)
     self.x, self.y = x, y
     self.message = message
 end

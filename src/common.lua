@@ -18,15 +18,20 @@ Colors={
   Background={r=0, g=0, b=0, a=255},
   white={r=255, g=255, b=255},
   background=BaseColors.black,
+  -- debug colors
+  debug=BaseColors.yellow,
   depthCount=BaseColors.redbrown,
   debugLine=BaseColors.yellow,
   debugOrigins=BaseColors.yellow,
+  -- foreground backgroun things
   eventForeground=BaseColors.yellow,
   eventBackground=BaseColors.redbrown,
   playerHealthForeground=BaseColors.yellow,
   playerHealthBackground=BaseColors.green,
   buttonBackground=BaseColors.green,
   buttonForeground=BaseColors.redbrown,
+  summoningForeground=BaseColors.redbrown,
+  summoningBackground=BaseColors.green,
 }
 
 

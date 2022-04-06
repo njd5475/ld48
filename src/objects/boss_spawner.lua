@@ -7,6 +7,27 @@ function BossSpawner:_init()
     self.obelisks = {}
 end
 
+function BossSpawner:getPercentageComplete()
+    local total = 0
+    local max = 0
+    for _, o in ipairs(self.obelisks) do
+        total = total + o:getCharge()
+        max = max + o:getMaxCharge()
+    end
+    return total/max
+end
+
+function BossSpawner:draw(game)
+
+    local w = 800
+    local h = 14
+    local x, y = love.graphics.getWidth()/2-w/2, h*2
+    SetColor('summoningBackground')
+    love.graphics.rectangle('fill', x, y, w, h)
+    SetColor('summoningForeground')
+    love.graphics.rectangle('fill', x, y, w*self:getPercentageComplete(), h)
+end
+
 function BossSpawner:update(game, dt)
     GameObject.update(self, game, dt)
 
