@@ -28,5 +28,5 @@ return {
     buildEnemy2=inSheet("Enemy2", img, 0, 3, GRID_SIZE),
     buildEnemy3=inSheet("Enemy3", img, 0, 4, GRID_SIZE),
     buildDemon=inSheet("Demon", img, 1, 1, 96),
-
+    buildProjectile=inSheet('Projectile', img, 0, 6, GRID_SIZE),
 }

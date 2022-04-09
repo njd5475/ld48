@@ -15,10 +15,6 @@ end
 
 function Obelisk:update(game, dt)
     Basic.update(self, game, dt)
-
-    if math.ceil(self.charge) % 100 == 0 then
-        Emit('The summoning is progressing')
-    end
 end
 
 function Obelisk:draw(game)

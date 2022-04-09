@@ -6,7 +6,7 @@ local Wall = Basic:derive('Wall')
 local img = require('main-sheet')
 
 function Wall:_init(x,y,w,h)
-  Basic._init(self, {x=x, y=y, w=w, h=h}, {x=16*2, y=0, w=16, h=16}, img)
+  Basic._init(self, {x=x, y=y, w=w, h=h}, {x=32*4, y=0, w=32, h=32}, img)
 end
 
 function Wall:draw(game)

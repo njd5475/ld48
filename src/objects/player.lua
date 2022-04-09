@@ -4,6 +4,7 @@ local Builders = require('objects.builders')
 local Pulse = require('effects.pulse')
 local Damageable = require('effects.damageable')
 local Player = Basic:derive("Player")
+local Projectile = require('objects.projectile')
 local PlayerHud = require('objects.player_hud')
 
 local CharacterSheet = require('main-sheet')
@@ -29,11 +30,12 @@ function Player:_init(x,y,w,h)
   self._immobile = false
   self.maxHealth = 100
   self.health = self.maxHealth
+  self.weaponCooldown = 0.5
 end
 
 function Player:damage(amount)
   if self.health > 0 then
-    self.health = self.health - amount
+    self.health = math.max(0, self.health - amount)
   end
 end
 
@@ -62,6 +64,14 @@ function Player:update(game, dt, room)
     --self:updateInput(dt)
   end
 
+  if love.mouse.isDown(1) and (self.inCooldown == 0) then
+    local cX, cY = self:boundsCenter(_)
+    local dir = Vec(love.mouse:getX(), love.mouse:getY()):sub(Vec(cX, cY)):normalize()
+    game:add(Projectile.generate(game, dir, cX, cY, 32, 32))
+    self.inCooldown = self.weaponCooldown
+  end
+  self.inCooldown = math.max(0, (self.inCooldown or self.weaponCooldown) - dt)
+  
 end
 
 function Player:immobile()

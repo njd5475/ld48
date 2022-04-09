@@ -17,34 +17,22 @@ function Room:_init(x,y,w,h)
   self.items = {}
   self.props = {w=15, h=11, tileW=64, tileH=64}
   self:buildFrame()
-
-  self:placeEnemy1()
-  self:placeEnemy2()
-  self:placeEnemy3()
 end
 
 function Room:placeBoss()
-  item, j, i = self:placeItemRandomlySized(Builders.buildDemon, printAttack, {w=96, h=96}, Boss)
-  self:addItem(item, j, i)
-  return item
+  return self:placeItemRandomlySized(Builders.buildDemon, printAttack, {w=96, h=96}, Boss)
 end
 
-function Room:placeEnemy1()
-  local item, j, i = self:placeItemRandomlyTyped(Builders.buildEnemy1, function() end, Enemy)
-  self:addItem(item, j, i)
-  return item
+function Room:placeEnemy1(game)
+  return self:placeItemRandomlyTyped(Builders.buildEnemy1, function() end, Enemy)
 end
 
-function Room:placeEnemy2()
-  local item, j, i = self:placeItemRandomlyTyped(Builders.buildEnemy2, function() end, Enemy)
-  self:addItem(item, j, i)
-  return item
+function Room:placeEnemy2(game)
+  return self:placeItemRandomlyTyped(Builders.buildEnemy2, function() end, Enemy)
 end
 
 function Room:placeEnemy3()
-  local item, j, i = self:placeItemRandomlyTyped(Builders.buildEnemy3, function() end, Enemy)
-  self:addItem(item, j, i)
-  return item
+  return self:placeItemRandomlyTyped(Builders.buildEnemy3, function() end, Enemy)
 end
 
 function Room:placeObelisk()
