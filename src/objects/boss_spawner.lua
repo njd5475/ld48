@@ -23,7 +23,6 @@ function BossSpawner:update(game, dt)
                 local boss = room:placeBoss()
                 Emit('Summoning Complete HE IS HERE!')
                 game:current():add(boss)
-                game:current():add()
             else
                 print('I could not find a room to spawn boss in')
             end

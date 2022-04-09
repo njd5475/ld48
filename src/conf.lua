@@ -3,7 +3,7 @@ function love.conf(t)
 		title = 'demons-call-inevitable-summoning',
 		package = 'demons-call-inevitable-summoning',
 		loveVersion = '0.10.2',
-		version = '0.0.1',
+		version = '0.0.2',
 		author = 'Nick',
 		description = 'Try to slow the summoning of a demon by hordes of minions while unlocking personal power. To see if you can survive the monster that awaits you.',
 		email = 'AddiekinStudio@gmail.com',

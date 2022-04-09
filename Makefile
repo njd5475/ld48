@@ -2,12 +2,13 @@
 NAME = demons-call-inevitable-summoning
 DIST = dist
 SRC  = src
-VERSION = 0.0.1
+VERSION = 0.0.2
 LOVE_FILE = $(DIST)/$(NAME).love
 MAC_VER = $(DIST)/$(NAME)-macos.zip
 DEB_VER = $(DIST)/$(NAME)-$(VERSION)_all.deb
 WIN_32_VER = $(DIST)/$(NAME)-win32.zip
 WIN_64_VER = $(DIST)/$(NAME)-win64.zip
+LOVE_RELEASE_FILES = $(WIN_32_VER) $(WIN_64_VER) $(DEB_VER) $(MAC_VER)
 AUTHOR = AddiekinStudio
 
 .PHONY: default
@@ -19,10 +20,10 @@ $(DIST):
 $(LOVE_FILE): $(DIST) $(SRC)/*
 	cd $(SRC) && zip -9 -r ../$(LOVE_FILE) .
 
-$(MAC_VER): $(LOVE_FILE)
+$(LOVE_RELEASE_FILES): $(LOVE_FILE)
 	cd $(SRC) && love-release -D -M -W
 
-$(DIST)/.uploaded: $(WIN_32_VER) $(WIN_64_VER) $(DEB_VER) $(MAC_VER) $(LOVE_FILE)
+$(DIST)/.uploaded: $(LOVE_RELEASE_FILES) $(LOVE_FILE)
 	butler push $(MAC_VER) "$(AUTHOR)/$(NAME):mac" --userversion=$(VERSION)
 	butler push $(WIN_32_VER) "$(AUTHOR)/$(NAME):win32" --userversion=$(VERSION)
 	butler push $(WIN_64_VER) "$(AUTHOR)/$(NAME):win64" --userversion=$(VERSION)
