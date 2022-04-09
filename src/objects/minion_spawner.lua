@@ -1,7 +1,7 @@
 
 local MinionSpawner = GameObject:derive('MinionSpawner')
 
-function pulse = function(duration, fn)
+local pulse = function(duration, fn)
     local timer = duration
     return function(game, dt)
         timer  = timer - dt

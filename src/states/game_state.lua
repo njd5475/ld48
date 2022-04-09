@@ -17,8 +17,7 @@ function GameState:_init()
 end
 
 function GameState:cleanup(game)
-  State.cleanup(game)
-
+  State.cleanup(self, game)
   loop:stop()
 end
 

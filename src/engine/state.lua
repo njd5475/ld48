@@ -14,6 +14,8 @@ function State:init(game)
 end
 
 function State:cleanup(game)
+  self.objects = {}
+  self.types = {}
 end
 
 function State:draw(game)
