@@ -21,6 +21,9 @@ function Game:_init(startState)
   }
   love.keyreleased = function(key)
     if key == 'escape' then
+      if self.shutdownHook then
+        self.shutdownHook(self)
+      end
       love.event.quit()
     elseif key == 'printscreen' then
       if love.graphics.newScreenshot then

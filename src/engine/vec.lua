@@ -38,4 +38,10 @@ function Vec:unwrap()
   return self.x, self.y
 end
 
+function Vec:copy()
+  return Vec(self.x, self.y)
+end
+
+Vec.Zero = Vec(0,0)
+
 return Vec

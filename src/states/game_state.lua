@@ -6,6 +6,7 @@ local Builders = require('objects.builders')
 local GameState = State:derive()
 local EventViewer = require('objects.eventviewer')
 local BossSpawner = require('objects.boss_spawner')
+local MinionSpanwer = require('objects.minion_spawner')
 
 local loop = love.audio.newSource("music/crappyloop.ogg", "stream")
 loop:setVolume(0.5)
@@ -55,6 +56,10 @@ function GameState:createLevel()
   -- self:add(o)
     
   self:add(spawner)
+  self:add(room:placeEnemy1())
+  self:add(room:placeEnemy2())
+  self:add(room:placeEnemy3())
+  self:add(MinionSpanwer(room))
   self.room = room
 end
 
@@ -114,6 +119,10 @@ end
 
 function GameState:stopMovingDown(key, game, dt)
   self.player:stopMovingDown(game, dt, self.room)
+end
+
+function GameState:fireWeapon()
+  self.player:fireWeapon()
 end
 
 return GameState

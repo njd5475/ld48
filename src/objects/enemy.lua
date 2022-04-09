@@ -13,6 +13,7 @@ function Enemy:_init(bounds, sprite, img)
     self.minDist = 10^2
     self.minAttackRange = 100^2
     self.followRange = 150^2
+    self.health = 400
 
     self:addBehavior('testdelay',
         Behaviors.Sequence(
@@ -39,6 +40,13 @@ function Enemy:_init(bounds, sprite, img)
             )
         )
     )
+end
+
+function Enemy:hurt(amount)
+    self.health = math.max(0, self.health - amount)
+    if self.health <= 0 then
+        self:kill()
+    end
 end
 
 function Enemy:draw(game)
