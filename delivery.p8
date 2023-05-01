@@ -293,7 +293,7 @@ function main()
 			print(str, 64-flr((#str*4)/2), 64, (t % 30) <= 15 and 3 or 14)
 			
 			if bestscore and bestscore > 0 then
-    print('best time:', 8, 90, 15)
+    print('last delivery time:', 8, 90, 15)
 				drawtime(bestscore, 8, 96, 15)
 			end
 		end,
