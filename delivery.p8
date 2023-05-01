@@ -45,7 +45,6 @@ function sheep(x,y,_num)
   update=function(me, ctx)
     x-=1
     if x < -8 then
-      ctx.score -= me.reward
       del(objs, me)
     end
   end,
@@ -188,7 +187,7 @@ function pillow(x,y)
 			if btn(3) then
 				y += 1
 			end
-			
+					
 			y = min(16*5+2,max(30,y))
 			for o in all(objs) do
 				-- check collisions
@@ -196,11 +195,7 @@ function pillow(x,y)
 					del(objs, o)
 
      ctx.sheep += 1 + (me.children or 0)
-					ctx.score += o.reward
-					if ctx.score < 0 then
-						dset(0,ctx._timer)
-						return fadescreen(_, gameover())
-					end
+
 					if o.num > -1 and ctx.cycle[o.num] then
 						local cy = ctx.cycle[o.num]
 						cy.mark = true
@@ -315,7 +310,7 @@ function main()
 end
 
 function game()
- objs,ctx={}, {pause=true,score=0, cycle={}, sheep=0}
+ objs,ctx={}, {pause=true, cycle={}, sheep=32760}
 
 	add(objs, sheepspwnr())
  add(objs, counter())
@@ -367,6 +362,12 @@ function game()
 		end,
 		
 		update=function(_, ctx)
+			if ctx.sheep < 0 then
+				dset(0,ctx._timer)
+				return fadescreen(_, gameover())
+			end
+
+		
 			if not ctx.pause then
 			 tmr:update(ctx)
 				for o in all(objs) do
@@ -438,9 +439,11 @@ function gameover()
 			end
 			
 			drawtime(tmr or -1, 54, 56, 11)
+			
+			cent('press ❎ to return', 96)
 		end,
 		update=function(_,ctx)
-			if btnp(4) then
+			if btnp(5) then
 				return main()
 			end
 			return _
