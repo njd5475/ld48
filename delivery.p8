@@ -310,7 +310,7 @@ function main()
 end
 
 function game()
- objs,ctx={}, {pause=true, cycle={}, sheep=32760}
+ objs,ctx={}, {pause=true, cycle={}, sheep=0}
 
 	add(objs, sheepspwnr())
  add(objs, counter())
