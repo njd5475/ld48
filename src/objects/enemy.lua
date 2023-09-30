@@ -10,9 +10,9 @@ function Enemy:_init(bounds, sprite, img)
     local me = self
     self.damage = 10
     self.speed = 40
-    self.minDist = 10^2
-    self.minAttackRange = 100^2
-    self.followRange = 150^2
+    self.minDist = 150^2
+    self.minAttackRange = 25^2
+    self.followRange = 100^2
     self.health = 400
 
     self:addBehavior('testdelay',

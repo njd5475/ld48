@@ -1,7 +1,7 @@
 
 local MinionSpawner = GameObject:derive('MinionSpawner')
 
-function pulse = function(duration, fn)
+local pulse = function(duration, fn)
     local timer = duration
     return function(game, dt)
         timer  = timer - dt
@@ -16,6 +16,17 @@ function MinionSpawner:_init(room)
     GameObject._init(self)
     self.room = room
     self.spawnPoints = {}
+end
+
+function MinionSpawner:add(EnemyType, point, chance, duration)
+    local pulseFn = pulse(duration, function(game,dt)
+        love.math.random(chance) 
+    end)
+    table.insert(self.spawnPoints, {
+        spawn=function(game, dt)
+
+        end
+    })
 end
 
 function MinionSpawner:update(game, dt)

@@ -7,6 +7,7 @@ local GameState = State:derive()
 local EventViewer = require('objects.eventviewer')
 local BossSpawner = require('objects.boss_spawner')
 local MinionSpanwer = require('objects.minion_spawner')
+local Distraction = require('objects.distraction')
 
 local loop = love.audio.newSource("music/crappyloop.ogg", "stream")
 loop:setVolume(0.5)

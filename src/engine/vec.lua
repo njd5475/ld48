@@ -3,6 +3,8 @@ local Vec = require('engine.class')()
 
 function Vec:_init(x, y)
   self.x, self.y = (x or 0), (y or 0)
+  self.getX = function(v) return v.x end
+  self.getY = function(v) return v.y end
 end
 
 function Vec:normalize()
