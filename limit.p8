@@ -2,33 +2,14 @@ pico-8 cartridge // http://www.pico-8.com
 version 41
 __lua__
 
-local dbgmsg='debugmsg'
+local dbgmsg=''
 local dbgt = 30
 
 local state
 local gravfn=nil
 
 function _init()
-	state=main()
-	state:addfx(temp)
-	state:addfx(obstruct)
-	
-	state:place(1,8,64,2,2)
- state:place(1,104,64,2,2)
- 
- local p = nil
- p=player(8,108,64,true,12)
-	state:push(ctrl(p, 1))
- state:push(p)
- state:addfx(playerreactor(p))
- p=player(6,12,62,false,8)
-	state:push(ctrl(p, 2))
- state:push(p)
- state:addfx(playerreactor(p))
- local mn,mx=38,88
- for i=1,5 do
-	 state:place(5,rnd(mx-mn)+mn,rnd(mx-mn)+mn,1,1)
- end
+	state=menu()
 end
 
 function _draw()
@@ -38,7 +19,7 @@ function _draw()
 		print(dbgmsg, 4, 4, 12)
 	end
 	
-	print(stat(7), 118, 4, 12)
+	--print(stat(7), 118, 4, 12)
 end
 
 function _update60()
@@ -130,7 +111,7 @@ function well(x,y)
 end
 
 function heater(x,y)
- local isplaced,t,hfn=false,2,heatarea(x,y,300)
+ local isplaced,t,hfn=false,4,heatarea(x,y,300)
  
 	return {
 		draw=function()
@@ -172,12 +153,14 @@ function force(x,y,dx,dy,amt)
 end
 
 function player(sp, x, y, lside, clr)
-	local healthmx=1000
+ local name=clr == 8 and 'red' or (clr == 12 and 'blue' or 'green')
+	local healthmx=2000
 	return {
 	 health=healthmx,
 	 x=x,
 	 y=y,
 	 clr=clr,
+	 name=name,
 	 lside=lside,
 		draw=function(_)
 		 rectfill(_.x-1, _.y-6, _.x+11, _.y-4, 5)
@@ -194,13 +177,35 @@ function player(sp, x, y, lside, clr)
 			
 			if _.y > 128 or _.health < 0 then
 				del(g.objs, _)
-				dbgmsg='player died'
+				_.health = 0
+				dbgmsg=name .. ' player died'
 				sfx(3)
-			end 
+			end
 		end,
 		healthperc=function(_)
 			return _.health / healthmx
 		end
+	}
+end
+
+function gamecheck(ps)
+	return {
+		draw=function()
+		end,
+		update=function(_, g)
+			local alive = {}
+			for p in all(ps) do
+				if p.health > 0 then
+					add(alive, p)
+				end
+			end
+			
+			if #alive == 1 then
+				g.nextstate = gameover()
+			end
+			
+			-- todo: handle a tie
+		end		
 	}
 end
 -->8
@@ -212,7 +217,7 @@ adjy={0,0,-1,1,-1,-1,1,1}
 function main()
  local spwn=5
  local t = spwn 
-	return {
+	local state={
 	 objs={},
 	 fxs={},
 	 adjcback={},
@@ -244,6 +249,10 @@ function main()
 		 	--_:push(cell(rnd(64)+32,rnd(64)+32))
 		 	t = spwn
 		 end
+
+   if _.nextstate then
+   	return _.nextstate
+   end
 
 			return _
 		end,
@@ -303,6 +312,34 @@ function main()
 			end
 		end
 	}
+	
+		state:addfx(temp)
+	state:addfx(obstruct)
+	
+	state:place(1,8,64,2,2)
+ state:place(1,104,64,2,2)
+ 
+ local players={}
+ local p = nil
+ p=player(8,108,64,true,12)
+	state:push(ctrl(p, 1))
+ state:push(p)
+ add(players, p)
+ state:addfx(playerreactor(p))
+ 
+ p=player(6,12,62,false,8)
+	state:push(ctrl(p, 2))
+ state:push(p)
+ add(players, p)
+ state:addfx(playerreactor(p))
+ 
+ state:push(gamecheck(players))
+ local mn,mx=38,88
+ for i=1,5 do
+	 state:place(5,rnd(mx-mn)+mn,rnd(mx-mn)+mn,1,1)
+ end
+	
+	return state
 end
 -->8
 -- fxs
@@ -311,11 +348,12 @@ function playerreactor(_p)
 	return function(c)
 		local d2 = distsq(c.x, c.y, _p.x+4, _p.y+4)
 	 
-	 if d2 < 500 and (abs(c.dx) > 0.5 or abs(c.dy) > 0.5) then
-	 	dbgmsg='player hurt'
+	 if d2 < 64 and (abs(c.dx) > 0.5 or abs(c.dy) > 0.5) then
 	 	c.dx -= c.dx * 0.25
 	 	c.dy -= c.dy * 0.25
-	 	_p.health-=1
+	 	local dmg=(1+(c:tmpperc() > 0.25 and rnd(5) or 0))
+	 	_p.health-=dmg
+	 	dbgmsg=_p.name .. ' player hurt ' .. dmg .. ' dmg'
 	 end
 	end
 end
@@ -418,7 +456,7 @@ function vecnorm(x1, y1)
  return x1/mag, y1/mag
 end
 -->8
--- ctrl
+-- ctrl + options
 
 function ctrl(p, pbtn)
 	pbtn-=1
@@ -474,7 +512,7 @@ function ctrl(p, pbtn)
 		end
 	}
 end
--->8
+
 -- options
 
 function mkopt(sp,fn,after)
@@ -512,10 +550,53 @@ end,heat)
 
 -- platform todo heal
 platform=mkopt(51, function(g,c)
- g:place(4,c.x-8,c.y-8,2,2)
+ g:place(4,c.x-2,c.y-2,1,1)
 end,gravitywell)
 
 
+-->8
+-- screens
+
+function gameover(p)
+	return {
+		draw=function()
+		 cls()
+		 if p then
+		  print(p.name .. ' wins')
+		 end
+			print('game over', 36, 4,9)
+			print('🅾️ - back to menu',36, 120, 12) 
+		end,
+		update=function(_)
+		 if btnp(4) then
+		 	return menu()
+		 end
+			return _
+		end
+	}
+end
+
+function menu()
+ local t = 0
+	return {
+		draw=function()
+		 cls()
+		 local n = 'pixel wielders'
+			print(n, 64-flr(#n*4/2), 32,132)
+			print('❎ - new game', 12)
+		end,
+		update=function(_)
+		
+		
+			if btnp(5) then
+				sfx(2)
+				return main()
+			end
+			
+			return _
+		end
+	}
+end
 __gfx__
 00000000067777777777776000030000076765500000000080000000b0000000c000000000000000000000000000000000000000000000000000000001000000
 000000006dddddddddddddd6000300007676655500000000088000000bb000000cc000000000000000000000000000000000000000000000000000001d000000
