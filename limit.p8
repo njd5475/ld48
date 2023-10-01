@@ -12,13 +12,19 @@ function _init()
 	state=main()
 	state:addfx(temp)
 	state:addfx(obstruct)
-	state:push(ctrl())
 	
 	state:place(1,8,64,2,2)
  state:place(1,104,64,2,2)
  
- state:push(player(6,12,62,false))
- state:push(player(7,108,64,true))
+ local p = nil
+ p=player(8,108,64,true,12)
+	state:push(ctrl(p, 1))
+ state:push(p)
+ state:addfx(playerreactor(p))
+ p=player(6,12,62,false,8)
+	state:push(ctrl(p, 2))
+ state:push(p)
+ state:addfx(playerreactor(p))
  local mn,mx=38,88
  for i=1,5 do
 	 state:place(5,rnd(mx-mn)+mn,rnd(mx-mn)+mn,1,1)
@@ -144,22 +150,56 @@ function heater(x,y)
 	}
 end
 
-function player(sp, x, y, lside)
+function force(x,y,dx,dy,amt)
+  local isplaced,t,fn=false,40,pforce(x,y,dx,dy,amt)
+ 
 	return {
+		draw=function()
+		end,
+		update=function(_,g)
+		 if not isplaced then
+		 	g:addfx(fn)
+		 	isplaced = true
+		 end
+		 
+		 t -= 1
+		 if t < 0 then
+		 	g:rmfx(fn)
+		 	del(g.objs, _)
+		 end
+		end
+	}
+end
+
+function player(sp, x, y, lside, clr)
+	local healthmx=1000
+	return {
+	 health=healthmx,
+	 x=x,
+	 y=y,
+	 clr=clr,
+	 lside=lside,
 		draw=function(_)
-			spr(sp, x, y, 1, 1, lside)
+		 rectfill(_.x-1, _.y-6, _.x+11, _.y-4, 5)
+		 rectfill(_.x, _.y-5, _.x+(10*_:healthperc()), _.y-5, 11)
+			spr(sp, _.x, _.y, 1, 1, lside)
 		end,
 		update=function(_, g)
-			local below=g:get(x,y)
+			local below=g:get(_.x+4,_.y+8)
 			if below ~= nil then
 				--dbgmsg='something is below me'
 			else
-				y += 1
-				if y > 128 then
-					del(g.objs, _)
-					dbgmsg='player died'
-				end
+				_.y += 1
 			end
+			
+			if _.y > 128 or _.health < 0 then
+				del(g.objs, _)
+				dbgmsg='player died'
+				sfx(3)
+			end 
+		end,
+		healthperc=function(_)
+			return _.health / healthmx
 		end
 	}
 end
@@ -190,7 +230,7 @@ function main()
 	  	o:draw(_)
 	  end
 	  
-	  print('cnt '.. #_.objs, 72, 4, 13)
+	  --print('cnt '.. #_.objs, 72, 4, 13)
 	 end,
 		update=function(_)
 		 --_.adjc = _.adjcback -- swap bufs
@@ -267,10 +307,35 @@ end
 -->8
 -- fxs
 
+function playerreactor(_p)
+	return function(c)
+		local d2 = distsq(c.x, c.y, _p.x+4, _p.y+4)
+	 
+	 if d2 < 500 and (abs(c.dx) > 0.5 or abs(c.dy) > 0.5) then
+	 	dbgmsg='player hurt'
+	 	c.dx -= c.dx * 0.25
+	 	c.dy -= c.dy * 0.25
+	 	_p.health-=1
+	 end
+	end
+end
+
+function pforce(_x,_y,dx,dy,amt)
+	
+	return function(c)
+	 local d2 = distsq(c.x, c.y, _x, _y)
+	 
+	 if d2 < 150 then
+		 c.dx += dx
+		 c.dy += dy
+		end
+	end
+end
+
 function temp(c)
 	if c.tmp > c.ris then
-		c.dx+=(rnd()*0.1-0.05)*(c.tmp/c.tmpmx)/16
-	 c.dy+=(rnd()*0.1-0.05)*(c.tmp/c.tmpmx)/16
+		c.dx+=(rnd()*0.05-0.025)*(c.tmp/c.tmpmx)/16
+	 c.dy+=(rnd()*0.05-0.025)*(c.tmp/c.tmpmx)/16
 		c.tmp -= 1 -- cool
 	end
 	c.x += c.dx
@@ -309,6 +374,11 @@ function grav(gx,gy,wgt)
 end
 
 function obstruct(c, g)
+	if abs(c.dx) >= 1 or abs(c.dy) >= 1 then
+		return
+	end 
+ 
+
 	local obs = g:get(c.x, c.y)
 	if obs and obs ~= c then
 		local adj = g:getadj(c.x, c.y)
@@ -350,19 +420,22 @@ end
 -->8
 -- ctrl
 
-function ctrl()
-
+function ctrl(p, pbtn)
+	pbtn-=1
 	return {
 	 sel=nil,
 	 x=64,
 	 y=64,
+	 player=p,
 		draw=function(_, g)
 			_.sel = _.sel or (platform(_))
 			_.first = _.first or _.sel
 		
+		 pal(3, _.player.clr)
 			spr(3, _.x, _.y)
+			pal()
 			
-			local sx,sy=32,119
+			local sx,sy=16+(1-pbtn)*64,119
 			local cur = _.first
 			while cur and cur ~= fwd do
 			 cur:draw(sx,sy)
@@ -373,7 +446,7 @@ function ctrl()
 		update=function(_, g)
 		 local dx,dy=0,0
 			for i=1,4 do
-				if btn(i-1) then
+				if btn(i-1,pbtn) then
 					dx=adjx[i]
 					dy=adjy[i]
 				end
@@ -381,11 +454,11 @@ function ctrl()
 			_.x += dx
 			_.y += dy
 			
-			if btnp(4) then
+			if btnp(4,pbtn) then
 				_:exec(g)
 			end
 			
-		 if btnp(5) then
+		 if btnp(5,pbtn) then
 				_:selnext()
 			end
 
@@ -408,12 +481,13 @@ function mkopt(sp,fn,after)
 	return function(c)
 		return {
 			draw=function(_,x,y)
-				spr(sp, x, y)
+			 spr(sp, x, y)
 				if c.sel == _ then
 					rect(x,y,x+8,y+8,7)
 				end
 			end,
 			exec=function(_,g)
+			 sfx(0)
 			 fn(g,c)
 			end,
 			after=after and after(c) or nil
@@ -423,6 +497,7 @@ end
 
 -- push
 push=mkopt(54, function(g,c)
+ g:push(force(c.x, c.y, c.player.lside and -1 or 1, 0, 10))
 end)
 
 -- heat spell
@@ -437,7 +512,7 @@ end,heat)
 
 -- platform todo heal
 platform=mkopt(51, function(g,c)
- g:place(1,c.x-8,c.y-8,2,2)
+ g:place(4,c.x-8,c.y-8,2,2)
 end,gravitywell)
 
 
@@ -467,13 +542,13 @@ __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 77777777777777777777000000000000000011dd000000000d7dd000000000000000000000000000000000000000000000000000000000000000000000000000
-fff666666ffff666666f000000000000d011dd10000220000d7d7dd0000000000000000000000000000000000000000000000000000000000000000000000000
-9aabccddee9aabccddee000006777760d010d101000292000d7d7d7d000000000000000000000000000000000000000000000000000000000000000000000000
-99bbc35d8899bbc35d880000066666600d11d001002a92200d7d7d7d000000000000000000000000000000000000000000000000000000000000000000000000
-443331128844333112880000056776500d001d0000aa9220dd77777d000000000000000000000000000000000000000000000000000000000000000000000000
-5555111222555511122200000555555000dd10d002aa99727d77777d000000000000000000000000000000000000000000000000000000000000000000000000
-00000000000000000000000000555500001100d002977aa2d777777d000000000000000000000000000000000000000000000000000000000000000000000000
-000000000000000000000000000000001100dd00002799a20dd777d0000000000000000000000000000000000000000000000000000000000000000000000000
+fff666666ffff666666f000000766500d011dd10000220000d7d7dd0000000000000000000000000000000000000000000000000000000000000000000000000
+9aabccddee9aabccddee000007666550d010d101000292000d7d7d7d000000000000000000000000000000000000000000000000000000000000000000000000
+99bbc35d8899bbc35d880000066655500d11d001002a92200d7d7d7d000000000000000000000000000000000000000000000000000000000000000000000000
+443331128844333112880000066655500d001d0000aa9220dd77777d000000000000000000000000000000000000000000000000000000000000000000000000
+5555111222555511122200000666555000dd10d002aa99727d77777d000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000006665510001100d002977aa2d777777d000000000000000000000000000000000000000000000000000000000000000000000000
+000000000000000000000000006651001100dd00002799a20dd777d0000000000000000000000000000000000000000000000000000000000000000000000000
 __label__
 d0d00dd0ddd0ddd00dd0ddd0ddd0ddd0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 ddd0d0d0d0d00d00d00000d0d0d000d0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
