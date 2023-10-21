@@ -16,26 +16,44 @@ local Sequence = function(...)
   local args = {...}
   local state = { status=running, i=1 }
   return function(context, dt)
+    -- if state.status == running then
+    --   local v = args[state.i] -- run current
+    --   state = {status=v(context, dt), i=state.i}
+    --   -- return running
+    -- elseif state.status == success and state.i < #args then
+    --   state.i = state.i + 1 -- next
+    --   local v = args[state.i]
+    --   state.status = running
+    --   -- return running
+    -- elseif state.status == failure then
+    --   state.i=1 -- end of the sequence repeat
+    --   state.status = running
+    --   return failure
+    -- elseif state.status == success and state.i >= #args then
+    --   state.i=1 -- end of the sequence repeat
+    --   state.status=running
+    --   return success
+    -- end
+    local i = 1
+    local status = success
     if state.status == running then
-      local v = args[state.i] -- run current
-      state = {status=v(context, dt), i=state.i}
-      -- return running
-    elseif state.status == success and state.i < #args then
-      state.i = state.i + 1 -- next
-      local v = args[state.i]
-      state.status = running
-      -- return running
-    elseif state.status == failure then
-      state.i=1 -- end of the sequence repeat
-      state.status = running
-      return failure
-    elseif state.status == success and state.i >= #args then
-      state.i=1 -- end of the sequence repeat
-      state.status=running
-      return success
+      i = state.i
     end
 
-    return running
+    while (status == success or status == running) and i < #args do
+      local v = args[i]
+      status = v(context, dt)
+      if status == failure then
+        return status
+      end
+      if status == running then
+        state = {status=running, i=i} -- OPT: don't have to recreate if necessary
+        return running
+      end
+      i = i + 1
+    end
+
+    return success
   end
 end
 

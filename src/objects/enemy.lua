@@ -12,11 +12,21 @@ function Enemy:_init(bounds, sprite, img)
     self.speed = 40
     self.minDist = 150^2
     self.minAttackRange = 25^2
+    self.minPickupRange = 50^2
+    self.shinyRange=150^2
     self.followRange = 100^2
     self.health = 400
 
     self:addBehavior('testdelay',
         Behaviors.Sequence(
+            Behaviors.Inverter(
+                Behaviors.Sequence(
+                    --Common.has('shinyObject', me),
+                    Common.moveTo('shinyObject', 'speed', 'minPickupRange', me),
+                    Common.emit('Oooh shiny'),
+                    Common.pickup('shinyObject', me)
+                )
+            ),
             Behaviors.Inverter(
                 Behaviors.Sequence(
                     Common.scanFor('Player', 'followRange', 'foundPlayer', me),

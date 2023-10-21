@@ -84,6 +84,12 @@ local attack = function(targetName, damagePropName, me)
     end
 end
 
+local pickup = function(targetName, me)
+    return function(ctx, dt)
+        me[targetName]:kill()
+    end
+end
+
 local roam = function(bounds, speedProp, minDistProp, me)
     local child = nil
     return function(ctx, dt)
@@ -103,12 +109,20 @@ local chance = function(chances)
     end
 end
 
+local has = function(propName, obj)
+    return function(context, dt)
+        return obj[propName] and success or failure
+    end
+end
+
 return {
     findClosest=findClosest,
     scanFor=scanFor,
     moveTo=moveTo,
     moveToRandomPoint=moveToRandomPoint,
     attack=attack,
+    pickup=pickup,
     roam=roam,
     emit=emit,
+    has=has,
 }

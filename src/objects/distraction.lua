@@ -31,7 +31,10 @@ function Distraction:update(g, dt)
         if found and #found > 0 then
             for _, f in ipairs(found) do
                 print("Trying to distract enemy")
-                f.foundPlayer = self
+                f.shinyObject = self
+                if f.foundPlayer then
+                    f.foundPlayer = nil
+                end
             end
         end
     end
