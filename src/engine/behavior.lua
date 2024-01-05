@@ -14,7 +14,7 @@ end
 
 local Sequence = function(...)
   local args = {...}
-  local state = { status=running, i=1 }
+  local state = nil
   return function(context, dt)
     -- if state.status == running then
     --   local v = args[state.i] -- run current
@@ -36,11 +36,11 @@ local Sequence = function(...)
     -- end
     local i = 1
     local status = success
-    if state.status == running then
+    if state and state.status == running then
       i = state.i
     end
 
-    while (status == success or status == running) and i < #args do
+    while (status == success or status == running) and i <= #args do
       local v = args[i]
       status = v(context, dt)
       if status == failure then
@@ -49,6 +49,9 @@ local Sequence = function(...)
       if status == running then
         state = {status=running, i=i} -- OPT: don't have to recreate if necessary
         return running
+      end
+      if status ~= success then
+        status = success
       end
       i = i + 1
     end
@@ -61,7 +64,7 @@ local Delay = function(delay, child)
   local state = delay
   return function (context, dt)
     if state <= 0 then
-      state = delay
+      state = delay --reset
       if child then
         return child(context, dt)
       end

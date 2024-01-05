@@ -35,6 +35,7 @@ function Player:_init(x,y,w,h)
 end
 
 function Player:damage(amount)
+  print('Damage to ' .. amount)
   if self.health > 0 then
     self.health = math.max(0, self.health - amount)
   end

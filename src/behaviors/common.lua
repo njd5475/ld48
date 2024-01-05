@@ -72,8 +72,9 @@ end
 
 local emit = function(message)
     return function(ctx, dt)
+        print('Emit: ' .. message)
         Emit(message)
-        return Behaviors.success
+        return "Success"
     end
 end
 
@@ -109,9 +110,12 @@ local chance = function(chances)
     end
 end
 
-local has = function(propName, obj)
+local has = function(propName, me)
     return function(context, dt)
-        return obj[propName] and success or failure
+        if me[propName] == nil then
+            return Behaviors.failure
+        end
+        return Behaviors.success
     end
 end
 

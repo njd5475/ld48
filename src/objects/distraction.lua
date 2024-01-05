@@ -12,6 +12,12 @@ function Distraction:_init(player, dir, distance)
     self.x, self.y = player:getX(), player:getY()
     self.target = dir:mult(distance)
     self.shifter = Tween.new(1.0, self, {x=self.x+self.target:getX(), y=self.y+self.target:getY()}, Tween.inOutQuad)
+    print('New Distraction')
+end
+
+function Distraction:kill()
+    print('Killing the distraction')
+    GameObject.kill(self)
 end
 
 function Distraction:damage()
@@ -30,8 +36,8 @@ function Distraction:update(g, dt)
         local found = g:withinRange(self.x, self.y, 150^2, "Enemy")
         if found and #found > 0 then
             for _, f in ipairs(found) do
-                print("Trying to distract enemy")
-                f.shinyObject = self
+                print("Trying to distract enemy " .. f.damage)
+                f['shinyObject'] = self
                 if f.foundPlayer then
                     f.foundPlayer = nil
                 end
